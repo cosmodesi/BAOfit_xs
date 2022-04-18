@@ -167,8 +167,16 @@ outdir = os.environ['HOME']+'/DESImockbaofits/'
 
 #do abacus cut
 
-abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
-xid = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0] #just look at first mock
+#abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
+#xid = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0] #just look at first mock
+
+abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/'
+fnm = 'results_realization001_rand20_'+znm+'.npy'
+result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+rebinned = result[:(result.shape[0]//bs)*bs:bs]
+ells = 0#(0, 2)
+s, xid = rebinned(ells=ells, return_sep=True)
+
 
 wo = 'abcutsky0'
                 
