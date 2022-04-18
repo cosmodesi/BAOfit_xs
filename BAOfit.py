@@ -1,16 +1,19 @@
 '''
-one code for all BAO fitting, copying from LSSanalysis and improving documentation
+BAO fitting from https://github.com/ashleyjross/BAOfit, adapted to be specific for DESI
 '''
 
 from numpy import loadtxt
 from math import *
-from EH import simulate
 from scipy.special import jn
 import numpy as np
 from fftlog_JB import *
 import numpy.linalg as linalg
 from numpy import zeros,dot
 from numpy.linalg import pinv
+
+from cosmoprimo.fiducial import DESI
+from cosmoprimo import PowerSpectrumBAOFilter
+
 
 
 
@@ -104,10 +107,9 @@ def mkxifile_3dewig(sp=1.,v='y',pkfile='Challenge_matterpower',mun=0,beta=0.4,sf
 
     return True
 
-def pk3elldfile_dewig(file='Challenge_matterpower',beta=0.4,sigt=3.0,sigr=3.0,sfog=3.5,mun=1.,sigs=15.,ns=.963,sigz=0,pw='y'):
+def pk3elldfile_dewig(beta=0.4,sigt=3.0,sigr=3.0,sfog=3.5,mun=1.,sigs=15.,ns=.963,sigz=0,pw='n'):
     '''
-    returns arrays for k, p0,2,4 multipoles for BAO and no BAO
-    file is input linear P(k)
+    returns arrays for k, p0,2,4 multipoles for BAO and no BAO for DESI cosmology
     
     mun = 0 for pre rec and 1 for post-rec with RSD removal (controls effect of smoothing scaling on RSD)
     beta is fiducial f/b
@@ -122,38 +124,17 @@ def pk3elldfile_dewig(file='Challenge_matterpower',beta=0.4,sigt=3.0,sigr=3.0,sf
     from scipy.integrate import quad
     from Cosmo import distance
     mult = 1.
-    dir = 'powerspectra/'
-    if file=='Challenge_matterpower' or file == 'TSPT_out':
-        om = 0.31
-        #lam = 1
-        h = .676
-        nindex = ns
-        ombhh = .022
-    if file == 'MICE_matterpower':
-        om = 0.25
-        #lam = .75
-        h = .7
-        ombhh = .044*0.7*.7 
-        nindex = .949
-    if file == 'DESI':
-        from cosmoprimo.fiducial import DESI
-        from cosmoprimo import PowerSpectrumBAOFilter
-        cosmo = DESI()
-        pkz = cosmo.get_fourier().pk_interpolator()
-        pk = pkz.to_1d(z=0)
-        kl = np.loadtxt(dir+'Challenge_matterpower.dat').transpose()[0] #this k spacing is known to work well
-        pkv = pk(kl)
-        pknow = PowerSpectrumBAOFilter(pk, engine='wallish2018').smooth_pk_interpolator()
-        pksmv = pknow(kl)
-    if file != 'DESI':
-        f = np.loadtxt(dir+file+'.dat').transpose()
+    
+	cosmo = DESI()
+	pkz = cosmo.get_fourier().pk_interpolator()
+	pk = pkz.to_1d(z=0)
+	kl = np.loadtxt('powerspectra/Challenge_matterpower.dat').transpose()[0] #this k spacing is known to work well
+	pkv = pk(kl)
+	pknow = PowerSpectrumBAOFilter(pk, engine='wallish2018').smooth_pk_interpolator()
+	pksmv = pknow(kl)
     if pw == 'y':
-        fo = open('P02'+file+'beta'+str(beta)+'sigs'+str(sfog)+'sigxy'+str(sigt)+'sigz'+str(sigr)+'Sk'+str(sigs)+'.dat','w')
+        fo = open('P02DESIbeta'+str(beta)+'sigs'+str(sfog)+'sigxy'+str(sigt)+'sigz'+str(sigr)+'Sk'+str(sigs)+'.dat','w')
         fo.write('# k P0 P2 P4 Psmooth0 Psmooth2 Psmooth4 Plin Plinsmooth\n')
-    if file != 'Pk_MICEcosmology_z0_Plin_Pnowig' and file != 'DESI':
-        s = simulate(omega=om,lamda=1-om,h=h,nindex=nindex,ombhh=ombhh)
-    elif file == 'Pk_MICEcosmology_z0_Plin_Pnowig':
-        mult = 8.*pi**3.    
     pl2 = []
     pl4 = []
     beta0 = 0.4
@@ -174,10 +155,6 @@ def pk3elldfile_dewig(file='Challenge_matterpower',beta=0.4,sigt=3.0,sigr=3.0,sf
         sigzc = d.cHz(z)*sigz
     
     norm = 1
-    if file != 'DESI':
-        kl = f[0]
-        pml = f[1]
-        norm = pml[0]/s.Psmooth(kl[0],0)
     p0l = []
     p2l = []
     p4l = []
@@ -187,22 +164,14 @@ def pk3elldfile_dewig(file='Challenge_matterpower',beta=0.4,sigt=3.0,sigr=3.0,sf
 
     for i in range(0,len(kl)):
         k = kl[i]
-        if file !='DESI':
-            pk = pml[i]*mult
-        else:
-            pk = pkv[i]
+        pk = pkv[i]
         pk0 = 0
         pk2 = 0
         pk4 = 0
         pksm0 = 0
         pksm2 = 0
         pksm4 = 0
-        if file == 'Pk_MICEcosmology_z0_Plin_Pnowig':
-            pksm = float(f[i].split()[2])*mult
-        elif file == 'DESI':
-            pksm = pksmv[i]
-        else:   
-            pksm = s.Psmooth(k,0)*norm
+        pksm = pksmv[i]
         dpk = pk-pksm
         for m in range(0,100):
             #mu = (1.-mul[m])           
@@ -253,7 +222,7 @@ def pk3elldfile_dewig(file='Challenge_matterpower',beta=0.4,sigt=3.0,sigr=3.0,sf
         fo.close()
         from matplotlib import pyplot as plt
         from numpy import loadtxt as load
-        d = load('P02'+file+'beta'+str(beta)+'sigs'+str(sfog)+'sigxy'+str(sigt)+'sigz'+str(sigr)+'Sk'+str(sigs)+'.dat').transpose()
+        d = load('P02DESIbeta'+str(beta)+'sigs'+str(sfog)+'sigxy'+str(sigt)+'sigz'+str(sigr)+'Sk'+str(sigs)+'.dat').transpose()
         plt.xlim(0,.5)
         plt.plot(d[0],d[-2]/d[-1])
         plt.plot(d[0],np.ones(len(d[0])),'--')
@@ -1018,116 +987,3 @@ def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=
 
 
 
-if __name__ == '__main__':
-    import sys
-    '''
-    example for 1D fit
-    '''
-    #This is setup to run the data in the exampledata folder, which is BOSS DR11 data
-    c1 = np.loadtxt('exampledata/cov0CMASSreconNScomb1DR118st2.dat')
-    c2 = np.loadtxt('exampledata/cov0CMASSreconNScomb2DR118st2.dat')
-    ct = (c1+c2)/2. #two independent sets of mocks are averaged for the DR11 covariance matrix
-    d = np.loadtxt('exampledata/xi0ACbossv1NScombreconbs8st2.dat').transpose()[1]
-    r = np.loadtxt('exampledata/xi0ACbossv1NScombreconbs8st2.dat').transpose()[0]
-    mod = np.loadtxt('exampledata/xi0camb_Nacc0n3.00.051.9_And.dat').transpose()[1]
-    #mod = np.loadtxt('BAOtemplates/xi0Challenge_matterpower0.406.010.015.00.dat').transpose()[1]
-    modsm = np.loadtxt('BAOtemplates/xi0smChallenge_matterpower0.406.010.015.00.dat').transpose()[1] #don't see smooth model from back then, shouldn't matter for this example
-    spa = .001
-    mina = .8
-    maxa = 1.2
-    cl = doxi_isolike(d,ct,mod,modsm,r,spa=spa,mina=mina,maxa=maxa)
-    al = [] #list to be filled with alpha values
-    for i in range(0,len(cl)):
-        a = .8+spa/2.+spa*i
-        al.append(a)
-    #below assumes you have matplotlib to plot things, if not, save the above info to a file or something
-    from matplotlib import pyplot as plt
-    plt.plot(al,cl-min(cl),'k-')
-    plt.show()
-    
-    
-    '''
-    2D fit from DR12
-    '''
-    min = 50.
-    max = 150. #the minimum and maximum scales to be used in the fit
-    maxb = 80. #the maximum scale to be used to set the bias prior
-    
-    dir = 'exampledata/Ross_2016_COMBINEDDR12/' 
-    ft = 'Ross_2016_COMBINEDDR12_'
-    zb = 'zbin3_' #change number to change zbin
-    binc = 0 #change number to change bin center
-    bs = 5. #the bin size
-    bc = 'post_recon_bincent'+str(binc)+'.dat' 
-    c = np.loadtxt(dir+ft+zb+'covariance_monoquad_'+bc)
-    d0 = np.loadtxt(dir+ft+zb+'correlation_function_monopole_'+bc).transpose()[1]
-    d2 = np.loadtxt(dir+ft+zb+'correlation_function_quadrupole_'+bc).transpose()[1]
-    if len(c) != len(d0)*2:
-        print('MISMATCHED data and cov matrix!')
-    dv = [] #empty list to become data vector
-    dvb = [] #empty list to become data vector for setting bias prior
-    rl = [] #empty list to become list of r values to evaluate model at 
-    rlb  = [] #empty list to become list of r values to evaluate model at for bias prior
-    mini = 0
-    for i in range(0,len(d0)):
-        r = i*bs+bs/2.+binc
-        if r > min and r < max:
-            dv.append(d0[i])
-            rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) #correct for pairs should have slightly larger average pair distance than the bin center
-            rl.append(rbc) 
-            if mini == 0:
-                mini = i #minimum index number to be used for covariance matrix index assignment
-            if r < maxb:
-                dvb.append(d0[i])
-                rlb.append(rbc)
-    for i in range(0,len(d2)):
-        r = i*bs+bs/2.+binc
-        if r > min and r < max:
-            dv.append(d2[i])
-            rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.)
-            rl.append(rbc)
-            if r < maxb:
-                dvb.append(d2[i])
-                rlb.append(rbc)
-
-    dv = np.array(dv)
-    print(len(dv))
-    covm = zeros((len(dv),len(dv))) #will become covariance matrix to be used with data vector
-    #need to cut it to correct size
-    for i in range(0,len(c)):
-        if i < len(d0):
-            ri = i*bs+bs/2.+binc
-            indi = i-mini
-        else:
-            ri = (i-len(d0))*bs+bs/2.+binc
-            indi = len(dv)//2+i-mini-len(d0)    
-        for j in range(0,len(c)):       
-            if j < len(d0):
-                rj = j*bs+bs/2.+binc
-                indj = j-mini
-            else:
-                rj = (j-len(d0))*bs+bs/2.+binc
-                indj = len(dv)//2+j-mini-len(d0)
-            if ri > min and ri < max and rj > min and rj < max:
-                #print ri,rj,i,j,indi,indj
-                covm[indi][indj] = c[i][j]
-    invc = pinv(covm) #the inverse covariance matrix to pass to the code
-    covmb = zeros((len(dvb),len(dvb)))
-    for i in range(0,len(dvb)):
-        if i < len(dvb)//2:
-            indi = i
-        else:
-            indi = i-len(dvb)//2+len(covm)//2
-        for j in range(0,len(dvb)):
-            if j < len(dvb)//2:
-                indj = j
-            else:
-                indj = j-len(dvb)//2+len(covm)//2
-            covmb[i][j] = covm[indi][indj]
-    invcb = pinv(covmb)
-    mod = 'Challenge_matterpower0.44.02.54.015.01.0.dat' #BAO template used     
-    fout = ft+zb+bc
-    spa = .001
-    mina = .8
-    maxa = 1.2
-    Xism_arat_1C_an(dv,invc,rl,mod,dvb,invcb,rlb,verbose=True)
