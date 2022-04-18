@@ -177,13 +177,21 @@ for i in range(0,len(scb)):
     rlb.append(rbc) 
 
 
-abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
-xid0 = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmax] #just look at first mock
-xid2 = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmax] #just look at first mock
+#abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
+abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/'
+fnm = 'results_realization001_rand20_'+znm+'.npy'
+result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+rebinned = result[:(result.shape[0]//bs)*bs:bs]
+ells = (0, 2)
+s, xi0,xi2 = rebinned(ells=ells, return_sep=True)
+
+
+xid0 = xi0[indmin:indmax]#np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmax] #just look at first mock
+xid2 = xi2[indmin:indmax]#np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmax] #just look at first mock
 xid = np.concatenate((xid0,xid2))
 
-xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmaxb] #just look at first mock
-xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmaxb] #just look at first mock
+xid0b = xi0[indmin:indmaxb]#np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmaxb] #just look at first mock
+xid2b = xi2[indmin:indmaxb]#np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmaxb] #just look at first mock
 xidb = np.concatenate((xid0b,xid2b))
 fout = 'LRGabcutsky0'+str(zmin)+str(zmax)+wm+str(bs)
 bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir)
