@@ -60,7 +60,7 @@ def mkxifile_3dewig(sp=1.,v='y',mun=0,beta=0.4,sfog=0,sigz=0,sigt=6.,sigr=10.,si
     if sigz != 0:
         wsigz += 'sigz'+str(sigz)
     #generate power spectra 
-    k,pl0,pl2,pl4,psm0,psm2,psm4 = pk3elldfile_dewig(beta=beta,sfog=sfog,sigz=sigz,sigt=sigt,sigr=sigr,mun=mun,sigs=sigs,pw='y')    
+    k,pl0,pl2,pl4,psm0,psm2,psm4 = pk3elldfile_dewig(beta=beta,sfog=sfog,sigz=sigz,sigt=sigt,sigr=sigr,mun=mun,sigs=sigs,pw=v)    
     #open files for writing
     fout = 'DESI'+str(beta)+str(sfog)+str(sigt)+str(sigr)+str(sigs)+wsigz+str(mun)+'.dat'
     f0 = open(dirout+'xi0'+fout,'w')
