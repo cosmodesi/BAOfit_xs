@@ -38,7 +38,7 @@ def findPolya(H,ci,d):
     return np.dot(comb,d)
 
 
-def mkxifile_3dewig(sp=1.,v='y',pkfile='Challenge_matterpower',mun=0,beta=0.4,sfog=0,sigz=0,sigt=6.,sigr=10.,sigs=15.):
+def mkxifile_3dewig(sp=1.,v='y',mun=0,beta=0.4,sfog=0,sigz=0,sigt=6.,sigr=10.,sigs=15.):
     '''
     create xi0,xi2,xi4 BAO and no BAO templates for use in BAO fitting code
     the templates are linear+BAO damping with bias = 1 at z = 0
@@ -60,9 +60,9 @@ def mkxifile_3dewig(sp=1.,v='y',pkfile='Challenge_matterpower',mun=0,beta=0.4,sf
     if sigz != 0:
         wsigz += 'sigz'+str(sigz)
     #generate power spectra 
-    k,pl0,pl2,pl4,psm0,psm2,psm4 = pk3elldfile_dewig(file=pkfile,beta=beta,sfog=sfog,sigz=sigz,sigt=sigt,sigr=sigr,mun=mun,sigs=sigs,pw='y')    
+    k,pl0,pl2,pl4,psm0,psm2,psm4 = pk3elldfile_dewig(beta=beta,sfog=sfog,sigz=sigz,sigt=sigt,sigr=sigr,mun=mun,sigs=sigs,pw='y')    
     #open files for writing
-    fout = pkfile+str(beta)+str(sfog)+str(sigt)+str(sigr)+str(sigs)+wsigz+str(mun)+'.dat'
+    fout = 'DESI'+str(beta)+str(sfog)+str(sigt)+str(sigr)+str(sigs)+wsigz+str(mun)+'.dat'
     f0 = open(dirout+'xi0'+fout,'w')
     f2 = open(dirout+'xi2'+fout,'w')
     f4 = open(dirout+'xi4'+fout,'w')
@@ -107,7 +107,7 @@ def mkxifile_3dewig(sp=1.,v='y',pkfile='Challenge_matterpower',mun=0,beta=0.4,sf
 
     return True
 
-def pk3elldfile_dewig(beta=0.4,sigt=3.0,sigr=3.0,sfog=3.5,mun=1.,sigs=15.,ns=.963,sigz=0,pw='n'):
+def pk3elldfile_dewig(beta=0.4,sigt=3.0,sigr=3.0,sfog=3.5,mun=1.,sigs=15.,sigz=0,pw='n'):
     '''
     returns arrays for k, p0,2,4 multipoles for BAO and no BAO for DESI cosmology
     
