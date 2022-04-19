@@ -1,3 +1,7 @@
+#environment details:
+#source /global/common/software/desi/users/adematti/cosmodesi_environment.sh main
+#PYTHONPATH=$PYTHONPATH:$HOME/code/BAOfit_xs ; replace $HOME/code/ with wherever you cloned it
+
 import BAOfit as bf
 import numpy as np
 import os
@@ -251,7 +255,7 @@ fo = open(fout,'w')
 fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
 for ii in range(0,Nmock):
     fout = 'LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)
-    ans = sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
+    ans = bf.sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
     fo.write(str(ii)+' ')
     for val in ans:
         fo.write(str(val)+' ')
