@@ -13,10 +13,19 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=False)
+parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
 parser.add_argument("--par", help="do 25 realizations in parallel",default=True)
+parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False)
 args = parser.parse_args()
 
+dofit = True
+
+if args.statsonly:
+    args.gencov = False
+    args.par = False
+    args.gentemp = False
+    dofit = False
 
 rmin = 50
 rmax = 150
@@ -50,103 +59,124 @@ if args.gentemp:
 
 #make covariance matrix from EZ mocks
 #def get_xi0cov():
-znm = str(10*zmin)[:1]+str(10*zmax)[:1]
-dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/EZmocks/'
-fnm = 'EZmock_results_'+znm
-result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+'_1.npy')
-rebinned = result[:(result.shape[0]//bs)*bs:bs]
-ells = (0, 2)
-s, xiell = rebinned(ells=ells, return_sep=True)
-indmin = 0
-indmax = len(s)
-indmaxb = len(s)
-sm = 0
-sx = 0
-sxb = 0
-for i in range(0,len(s)):
-    if s[i] > rmin and sm == 0:
-        indmin = i
-        sm = 1
-    if s[i] > rmax and sx == 0:
-        indmax = i
-        sx = 1
-    if s[i] > rmaxb and sxb == 0:
-        indmaxb = i
-        sxb = 1
-print(indmin,indmax)        
-nbin = 2*(indmax-indmin)
-print(nbin)
-xiave = np.zeros((nbin))
-cov = np.zeros((nbin,nbin))
-nbinb = 2*(indmaxb-indmin)
-print(nbinb)
-xiaveb = np.zeros((nbinb))
-covb = np.zeros((nbinb,nbinb))
-
-Ntot = 0
-fac = 1.
-for i in range(1,Nmock+1):
-	nr = '_'+str(i)
-	result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+nr+'.npy')
+if args.gencov:
+	znm = str(10*zmin)[:1]+str(10*zmax)[:1]
+	dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/EZmocks/'
+	fnm = 'EZmock_results_'+znm
+	result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+'_1.npy')
 	rebinned = result[:(result.shape[0]//bs)*bs:bs]
-	xic0 = rebinned(ells=ells)[0][indmin:indmax]
-	xic2 = rebinned(ells=ells)[1][indmin:indmax]
-	xic = np.concatenate((xic0,xic2))
-	xiave += xic
-	xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
-	xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
-	xicb = np.concatenate((xic0b,xic2b))
-	xiaveb += xicb
-	Ntot += 1.
-print( Ntot)        
-xiave = xiave/float(Ntot)
-xiaveb = xiaveb/float(Ntot)
-for i in range(1,Nmock+1):
-	nr = '_'+str(i)
-	result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+nr+'.npy')
-	rebinned = result[:(result.shape[0]//bs)*bs:bs]
-	xic0 = rebinned(ells=ells)[0][indmin:indmax]
-	xic2 = rebinned(ells=ells)[1][indmin:indmax]
-	xic = np.concatenate((xic0,xic2))
-	xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
-	xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
-	xicb = np.concatenate((xic0b,xic2b))
-	for j in range(0,nbin):
-		xij = xic[j]
-		for k in range(0,nbin):
-			xik = xic[k]
-			cov[j][k] += (xij-xiave[j])*(xik-xiave[k])
-	for j in range(0,nbinb):
-		xij = xicb[j]
-		for k in range(0,nbinb):
-			xik = xicb[k]
-			covb[j][k] += (xij-xiaveb[j])*(xik-xiaveb[k])
+	ells = (0, 2)
+	s, xiell = rebinned(ells=ells, return_sep=True)
+	indmin = 0
+	indmax = len(s)
+	indmaxb = len(s)
+	sm = 0
+	sx = 0
+	sxb = 0
+	for i in range(0,len(s)):
+		if s[i] > rmin and sm == 0:
+			indmin = i
+			sm = 1
+		if s[i] > rmax and sx == 0:
+			indmax = i
+			sx = 1
+		if s[i] > rmaxb and sxb == 0:
+			indmaxb = i
+			sxb = 1
+	print(indmin,indmax)        
+	nbin = 2*(indmax-indmin)
+	print(nbin)
+	xiave = np.zeros((nbin))
+	cov = np.zeros((nbin,nbin))
+	nbinb = 2*(indmaxb-indmin)
+	print(nbinb)
+	xiaveb = np.zeros((nbinb))
+	covb = np.zeros((nbinb,nbinb))
 
-cov = cov/float(Ntot)             
-covb = covb/float(Ntot)      
-sc = np.concatenate((s[indmin:indmax],s[indmin:indmax]))
-scb = np.concatenate((s[indmin:indmaxb],s[indmin:indmaxb]))
-#return cov
+	Ntot = 0
+	fac = 1.
+	for i in range(1,Nmock+1):
+		nr = '_'+str(i)
+		result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+nr+'.npy')
+		rebinned = result[:(result.shape[0]//bs)*bs:bs]
+		xic0 = rebinned(ells=ells)[0][indmin:indmax]
+		xic2 = rebinned(ells=ells)[1][indmin:indmax]
+		xic = np.concatenate((xic0,xic2))
+		xiave += xic
+		xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
+		xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
+		xicb = np.concatenate((xic0b,xic2b))
+		xiaveb += xicb
+		Ntot += 1.
+	print( Ntot)        
+	xiave = xiave/float(Ntot)
+	xiaveb = xiaveb/float(Ntot)
+	for i in range(1,Nmock+1):
+		nr = '_'+str(i)
+		result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+nr+'.npy')
+		rebinned = result[:(result.shape[0]//bs)*bs:bs]
+		xic0 = rebinned(ells=ells)[0][indmin:indmax]
+		xic2 = rebinned(ells=ells)[1][indmin:indmax]
+		xic = np.concatenate((xic0,xic2))
+		xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
+		xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
+		xicb = np.concatenate((xic0b,xic2b))
+		for j in range(0,nbin):
+			xij = xic[j]
+			for k in range(0,nbin):
+				xik = xic[k]
+				cov[j][k] += (xij-xiave[j])*(xik-xiave[k])
+		for j in range(0,nbinb):
+			xij = xicb[j]
+			for k in range(0,nbinb):
+				xik = xicb[k]
+				covb[j][k] += (xij-xiaveb[j])*(xik-xiaveb[k])
 
-#cov = get_xi0cov()
-xistd = []
-covn = np.zeros((len(xiave),len(xiave)))
-for i in range(0,len(xiave)):
-     xistd.append(np.sqrt(cov[i][i]))
-     for j in range(0,len(xiave)):
-         covn[i][j] = cov[i][j]/np.sqrt(cov[i][i]*cov[j][j])
-# plt.errorbar(sc,sc**2.*xiave,sc**2.*np.array(xistd))
-# plt.show()
-# invcov = linalg.inv(cov)
-# #plt.imshow(invcov)
-# plt.imshow(covn)
-# plt.show()
-# sys.exit()
+	cov = cov/float(Ntot)             
+	covb = covb/float(Ntot)      
+	sc = np.concatenate((s[indmin:indmax],s[indmin:indmax]))
+	scb = np.concatenate((s[indmin:indmaxb],s[indmin:indmaxb]))
+	#return cov
 
-invc = np.linalg.inv(cov) #the inverse covariance matrix to pass to the code
-invcb = np.linalg.inv(covb) #the inverse covariance matrix to get the bias values to pass to the code
-#mod = 'Challenge_matterpower0.5933.058.515.00.dat' #BAO template used		
-#fout = 'desi_challeng1_ajr_prerec_0.5933.058.515.00'
+	#cov = get_xi0cov()
+	xistd = []
+	covn = np.zeros((len(xiave),len(xiave)))
+	for i in range(0,len(xiave)):
+		 xistd.append(np.sqrt(cov[i][i]))
+		 for j in range(0,len(xiave)):
+			 covn[i][j] = cov[i][j]/np.sqrt(cov[i][i]*cov[j][j])
+	# plt.errorbar(sc,sc**2.*xiave,sc**2.*np.array(xistd))
+	# plt.show()
+	# invcov = linalg.inv(cov)
+	# #plt.imshow(invcov)
+	# plt.imshow(covn)
+	# plt.show()
+	# sys.exit()
+
+	invc = np.linalg.inv(cov) #the inverse covariance matrix to pass to the code
+	invcb = np.linalg.inv(covb) #the inverse covariance matrix to get the bias values to pass to the code
+
+	print(sc)
+	#This assumes sc has bin center values and then applies correction assuming spherically symmetric distribution of data
+	rl = []
+	#nbin = 0
+	for i in range(0,len(sc)):
+		r = sc[i]
+		#correct for pairs should have slightly larger average pair distance than the bin center
+		#this assumes mid point of bin is being used and pairs come from full 3D volume
+		rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
+		rl.append(rbc) 
+
+	rlb = []
+	#nbin = 0
+	for i in range(0,len(scb)):
+		r = scb[i]
+		#correct for pairs should have slightly larger average pair distance than the bin center
+		#this assumes mid point of bin is being used and pairs come from full 3D volume
+		rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
+		rlb.append(rbc) 
+
+
 wm = str(sfog)+str(dperp)+str(drad)
 mod = 'DESI0.4'+wm+'15.00.dat'
 
@@ -160,23 +190,6 @@ mina = .8
 maxa = 1.2
 outdir = os.environ['HOME']+'/DESImockbaofits/'
 
-rl = []
-#nbin = 0
-for i in range(0,len(sc)):
-    r = sc[i]
-    #correct for pairs should have slightly larger average pair distance than the bin center
-    #this assumes mid point of bin is being used and pairs come from full 3D volume
-    rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
-    rl.append(rbc) 
-
-rlb = []
-#nbin = 0
-for i in range(0,len(scb)):
-    r = scb[i]
-    #correct for pairs should have slightly larger average pair distance than the bin center
-    #this assumes mid point of bin is being used and pairs come from full 3D volume
-    rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
-    rlb.append(rbc) 
 
 
 if args.pv == 'JM':
@@ -220,15 +233,53 @@ def doreal(mn):
 	#plt.plot(sc,sc**2.*modl[1],'k-')
 	#plt.show()
 
-if args.par:
-	from multiprocessing import Pool
-	N = 25
-	p = Pool(N)
-	inds = np.arange(N)
-	p.map(doreal,inds)
+if dofit:
+	if args.par:
+		from multiprocessing import Pool
+		N = 25
+		p = Pool(N)
+		inds = np.arange(N)
+		p.map(doreal,inds)
 
-else:
-	doreal(0)
+	else:
+		doreal(0)
+
+#compile stats
+Nmock = 25
+fout = outdir+'AperpAparfits_LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
+fo = open(fout,'w')
+fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
+for ii in range(0,Nmock):
+    fout = 'LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)
+    ans = sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
+    fo.write(str(ii)+' ')
+    for val in ans:
+        fo.write(str(val)+' ')
+    fo.write('\n')
+fo.close()
+
+all = np.loadtxt(fout).transpose()
+
+meanchi2 = np.mean(all[-3])
+print('<chi2>/dof is '+str(round(meanchi2,3))+'/'+str(len(rl)-10))
+
+meanapar = np.mean(all[1])
+stdapar = np.std(all[1])
+meanspar = np.mean(all[2])
+print('<alpha_||>,std(alpha_||),<sigma_||>')
+print(meanapar,stdapar,meanspar)
+meanaperp = np.mean(all[3])
+stdaperp = np.std(all[3])
+meansperp = np.mean(all[4])
+print('<alpha_perp>,std(alpha_perp),<sigma_perp>')
+print(meanaperp,stdaperp,meansperp)
+corrparperp = np.corr(all[1],all[3])
+meancorr = np.mean(all[-1])
+print('corr_par,perp,<corr_par,perp>')
+print(corrparperp,meancorr)
+
+    
+
 
 sys.exit()
 
