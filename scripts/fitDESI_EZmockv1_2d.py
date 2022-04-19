@@ -20,10 +20,10 @@ parser.add_argument("--dperp", help="transverse damping; default is about right 
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
 
-parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=False)
-parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True)
+parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=False,type=bool)
+parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
-parser.add_argument("--par", help="do 25 realizations in parallel",default=True)
+parser.add_argument("--par", help="do 25 realizations in parallel",default=True,type=bool)
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
 args = parser.parse_args()
 
