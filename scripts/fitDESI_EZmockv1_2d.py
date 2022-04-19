@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=False)
+parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
 parser.add_argument("--par", help="do 25 realizations in parallel",default=True)
 args = parser.parse_args()
 
@@ -178,26 +179,40 @@ for i in range(0,len(scb)):
     rlb.append(rbc) 
 
 
-#abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
-abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/'
+if args.pv == 'JM':
+    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
+    if bs != 4:
+        print('only a binsize of 4 is supported, exiting')
+        sys.exit()
+if args.pv == 'CS':
+    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
+
 
 
 def doreal(mn):
-	fnm = 'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.npy'
-	result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-	rebinned = result[:(result.shape[0]//bs)*bs:bs]
-	ells = (0, 2)
-	s, xiell = rebinned(ells=ells, return_sep=True)
+	if args.pv == 'CS':
+	    fnm = 'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.npy'
+	    result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+	    rebinned = result[:(result.shape[0]//bs)*bs:bs]
+	    ells = (0, 2)
+	    s, xiell = rebinned(ells=ells, return_sep=True)
 
+	    xid0 = xiell[0][indmin:indmax]
+	    xid2 = xiell[1][indmin:indmax]
+	    
+	    xid0b = xiell[0][indmin:indmaxb]
+	    xid2b = xiell[1][indmin:indmaxb]
 
-	xid0 = xiell[0][indmin:indmax]#np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmax] #just look at first mock
-	xid2 = xiell[1][indmin:indmax]#np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmax] #just look at first mock
+	if args.pv == 'JM':
+	    xid0 = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
+	    xid2 = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
+
+	    xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
+	    xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
+
 	xid = np.concatenate((xid0,xid2))
-
-	xid0b = xiell[0][indmin:indmaxb]#np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmaxb] #just look at first mock
-	xid2b = xiell[1][indmin:indmaxb]#np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[0][indmin:indmaxb] #just look at first mock
-	xidb = np.concatenate((xid0b,xid2b))
-	fout = 'LRGabcutsky0'+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)
+	xidb = np.concatenate((xid0b,xid2b))    
+	fout = 'LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)
 	bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir)
 	#bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
 	#modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
