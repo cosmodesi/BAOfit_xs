@@ -20,7 +20,7 @@ parser.add_argument("--gentemp", help="whether or not to generate BAO templates"
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
 parser.add_argument("--par", help="do 25 realizations in parallel",default=True)
-parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False)
+parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
 args = parser.parse_args()
 
 dofit = True
