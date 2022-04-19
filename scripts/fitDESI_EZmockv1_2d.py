@@ -40,6 +40,8 @@ zmin = args.zmin
 zmax = args.zmax
 bs = 4
 
+nbt = int(2*(rmax-rmin)/bs)
+
 sfog = 3 #fog velocity term, 3 is kind of cannonical
 dperp = 4 # about right for z ~0.8
 drad = 8 # about right for z ~0.8
@@ -265,7 +267,7 @@ fo.close()
 all = np.loadtxt(foutall).transpose()
 
 meanchi2 = np.mean(all[-3])
-print('<chi2>/dof is '+str(round(meanchi2,3))+'/'+str(len(rl)-10))
+print('<chi2>/dof is '+str(round(meanchi2,3))+'/'+str(nbt-10))
 
 meanapar = np.mean(all[1])
 stdapar = np.std(all[1])
