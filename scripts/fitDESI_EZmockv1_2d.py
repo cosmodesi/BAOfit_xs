@@ -250,8 +250,8 @@ if dofit:
 
 #compile stats
 Nmock = 25
-fout = outdir+'AperpAparfits_LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
-fo = open(fout,'w')
+foutall = outdir+'AperpAparfits_LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
+fo = open(foutall,'w')
 fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
 for ii in range(0,Nmock):
     fout = 'LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)
@@ -262,7 +262,7 @@ for ii in range(0,Nmock):
     fo.write('\n')
 fo.close()
 
-all = np.loadtxt(fout).transpose()
+all = np.loadtxt(foutall).transpose()
 
 meanchi2 = np.mean(all[-3])
 print('<chi2>/dof is '+str(round(meanchi2,3))+'/'+str(len(rl)-10))
