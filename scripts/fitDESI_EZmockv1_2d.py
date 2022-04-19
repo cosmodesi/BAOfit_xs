@@ -40,6 +40,11 @@ zmin = args.zmin
 zmax = args.zmax
 bs = 4
 
+if bs != 4:
+	print('only a binsize of 4 is supported, exiting')
+	sys.exit()
+
+
 nbt = int(2*(rmax-rmin)/bs)
 
 sfog = 3 #fog velocity term, 3 is kind of cannonical
@@ -200,9 +205,6 @@ outdir = os.environ['HOME']+'/DESImockbaofits/'
 
 if args.pv == 'JM':
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
-    if bs != 4:
-        print('only a binsize of 4 is supported, exiting')
-        sys.exit()
 if args.pv == 'CS':
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
 
@@ -210,17 +212,23 @@ if args.pv == 'CS':
 
 def doreal(mn):
 	if args.pv == 'CS':
-	    fnm = 'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.npy'
-	    result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-	    rebinned = result[:(result.shape[0]//bs)*bs:bs]
-	    ells = (0, 2)
-	    s, xiell = rebinned(ells=ells, return_sep=True)
-
-	    xid0 = xiell[0][indmin:indmax]
-	    xid2 = xiell[1][indmin:indmax]
-	    
-	    xid0b = xiell[0][indmin:indmaxb]
-	    xid2b = xiell[1][indmin:indmaxb]
+        fnm = abdir+'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.dat'
+        xis = np.loadxt(fnm).transpose()
+        xid0 = xis[2][indmin:indmax]
+        xid2 = xis[3][indmin:indmax]
+        xid0b = xis[2][indmin:indmaxb]
+        xid2b = xis[3][indmin:indmaxb]
+# 	    fnm = 'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.npy'
+# 	    result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+# 	    rebinned = result[:(result.shape[0]//bs)*bs:bs]
+# 	    ells = (0, 2)
+# 	    s, xiell = rebinned(ells=ells, return_sep=True)
+# 
+# 	    xid0 = xiell[0][indmin:indmax]
+# 	    xid2 = xiell[1][indmin:indmax]
+# 	    
+# 	    xid0b = xiell[0][indmin:indmaxb]
+# 	    xid2b = xiell[1][indmin:indmaxb]
 
 	if args.pv == 'JM':
 	    xid0 = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
