@@ -213,7 +213,7 @@ if args.pv == 'CS':
 def doreal(mn):
     if args.pv == 'CS':
         fnm = abdir+'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.dat'
-        xis = np.loadxt(fnm).transpose()
+        xis = np.loadtxt(fnm).transpose()
         xid0 = xis[2][indmin:indmax]
         xid2 = xis[3][indmin:indmax]
         xid0b = xis[2][indmin:indmaxb]
