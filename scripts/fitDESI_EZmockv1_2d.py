@@ -16,6 +16,10 @@ import pycorr
 parser = argparse.ArgumentParser()
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
+parser.add_argument("--dperp", help="transverse damping; default is about right for z~1",default=4.0,type=float)
+parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
+parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
+
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=False)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
@@ -47,9 +51,9 @@ if bs != 4:
 
 nbt = int(2*(rmax-rmin)/bs)
 
-sfog = 3 #fog velocity term, 3 is kind of cannonical
-dperp = 4 # about right for z ~0.8
-drad = 8 # about right for z ~0.8
+sfog = args.sfog #fog velocity term, 3 is kind of cannonical
+dperp = args.dperp # 
+drad = args.drad # 
 
 Nmock = 1000
 
