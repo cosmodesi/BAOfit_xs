@@ -3,16 +3,51 @@ import numpy as np
 import os
 from matplotlib import pyplot as plt
 
+
+Nmock = 500
+
+import argparse
+
+import pycorr
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
+parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
+parser.add_argument("--dperp", help="transverse damping; default is about right for z~1",default=4.0,type=float)
+parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
+parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
+parser.add_argument("--beta", help="fiducial beta in template; shouldn't matter for pre-rec",default=0.4,type=float)
+parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
+parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
+parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
+parser.add_argument("--par", help="do 25 realizations in parallel",default=True,type=bool)
+parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
+args = parser.parse_args()
+
 rmin = 50
 rmax = 150
 maxb = 80.
 binc = 0
 
-zmin = 0.8
-zmax = 1.1
+zmin = args.zmin
+zmax = args.zmax
 bs = 4
 
-Nmock = 500
+
+if args.gentemp:
+	#make BAO template given parameters above, using DESI fiducial cosmology and cosmoprimo P(k) tools
+	#mun is 0 for pre rec
+	#sigs is only relevant if mun != 0 and should then be the smoothing scale for reconstructions
+	#beta is b/f, so should be changed depending on tracer
+	#sp is the spacing in Mpc/h of the templates that get written out, most of the rest of the code assumes 1
+	#BAO and nowiggle templates get written out for xi0,xi2,xi4 (2D code reconstructions xi(s,mu) from xi0,xi2,xi4)
+	bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
+
+wm = str(args.beta)+str(args.sfog)+str(args.dperp)+str(args.drad)
+mod = np.loadtxt('BAOtemplates/xi0DESI'+wm+'15.00.dat').transpose()[1]
+modsm = np.loadtxt('BAOtemplates/xi0smDESI'+wm+'15.00.dat').transpose()[1]
+
+
 
 def sigreg_c12(al,chill,fac=1.,md='f'):
 	#report the confidence region +/-1 for chi2
@@ -138,10 +173,6 @@ plt.legend()
 plt.title('apply a factor '+str(round(cfac,2))+' to the mock error')
 plt.show()
 
-#mod = np.loadtxt('BAOtemplates/xi0Challenge_matterpower0.404.08.015.00.dat').transpose()[1]
-#modsm = np.loadtxt('BAOtemplates/xi0smChallenge_matterpower0.404.08.015.00.dat').transpose()[1]
-mod = np.loadtxt('BAOtemplates/xi0DESI0.434815.00.dat').transpose()[1]
-modsm = np.loadtxt('BAOtemplates/xi0smDESI0.434815.00.dat').transpose()[1]
 
 spa=.001
 outdir = os.environ['HOME']+'/DA02baofits/'
