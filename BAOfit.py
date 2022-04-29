@@ -916,6 +916,7 @@ def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=
     
     B = .01
     chiBmin = 100000
+    BB = None
     while B < 4.:
         chiB = bb.chi_templ_alphfXX((B,0,0,0,B,0,0,0))
         if chiB < chiBmin:
@@ -924,7 +925,12 @@ def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=
             #print(BB,chiBmin)
         B += .01    
     #bb.chi_templ_alphfXX((BB,0,0,0,1.,0,0,0),v='y')    
-    print(BB,chiBmin)
+    if BB is not None:
+        print(BB,chiBmin)
+    else:
+        print('DID NOT FIND A CHI2 better than '+str(chiBmin)+' when getting template amplitude')
+        print('check template and cov matrix; NOT proceeding with fit')
+        return True
     b.BB = BB
     b.B0 = BB       
     b.Bp= Bp
