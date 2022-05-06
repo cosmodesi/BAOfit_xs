@@ -116,6 +116,8 @@ def get_xi0cov():
     
     dirm = '/global/project/projectdirs/desi/users/dvalcin/Mocks/2PCF/'
     fnm = 'xi_lognormal_lrg_sub_'
+    if args.rectype is not None:
+        fnm = 'MG_reciso_Recon_'+fnm
     xin0 = np.loadtxt(dirm+fnm+'1.txt')
     nbin = len(xin0)
     print(nbin)
