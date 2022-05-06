@@ -45,11 +45,13 @@ if args.gentemp:
     #BAO and nowiggle templates get written out for xi0,xi2,xi4 (2D code reconstructions xi(s,mu) from xi0,xi2,xi4)
     if args.rectype == None:
         bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
+        munw = '0'
+        munw= '1'
     elif 'iso' in args.rectype:
         bf.mkxifile_3dewig(sp=1.,v='n',mun=1,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
 wm = str(args.beta)+str(args.sfog)+str(args.dperp)+str(args.drad)
-mod = np.loadtxt('BAOtemplates/xi0DESI'+wm+'15.00.dat').transpose()[1]
-modsm = np.loadtxt('BAOtemplates/xi0smDESI'+wm+'15.00.dat').transpose()[1]
+mod = np.loadtxt('BAOtemplates/xi0DESI'+wm+'15.0'+munw+'.dat').transpose()[1]
+modsm = np.loadtxt('BAOtemplates/xi0smDESI'+wm+'15.0'+munw+'.dat').transpose()[1]
 
 
 
