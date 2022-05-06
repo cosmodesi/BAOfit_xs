@@ -37,14 +37,14 @@ bs = 4
 
 
 if args.gentemp:
-	#make BAO template given parameters above, using DESI fiducial cosmology and cosmoprimo P(k) tools
-	#mun is 0 for pre rec
-	#sigs is only relevant if mun != 0 and should then be the smoothing scale for reconstructions
-	#beta is b/f, so should be changed depending on tracer
-	#sp is the spacing in Mpc/h of the templates that get written out, most of the rest of the code assumes 1
-	#BAO and nowiggle templates get written out for xi0,xi2,xi4 (2D code reconstructions xi(s,mu) from xi0,xi2,xi4)
-	if args.rectype == None:
-	    bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
+    #make BAO template given parameters above, using DESI fiducial cosmology and cosmoprimo P(k) tools
+    #mun is 0 for pre rec
+    #sigs is only relevant if mun != 0 and should then be the smoothing scale for reconstructions
+    #beta is b/f, so should be changed depending on tracer
+    #sp is the spacing in Mpc/h of the templates that get written out, most of the rest of the code assumes 1
+    #BAO and nowiggle templates get written out for xi0,xi2,xi4 (2D code reconstructions xi(s,mu) from xi0,xi2,xi4)
+    if args.rectype == None:
+        bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
     elif 'iso' in args.rectype:
         bf.mkxifile_3dewig(sp=1.,v='n',mun=1,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
 wm = str(args.beta)+str(args.sfog)+str(args.dperp)+str(args.drad)
@@ -54,59 +54,59 @@ modsm = np.loadtxt('BAOtemplates/xi0smDESI'+wm+'15.00.dat').transpose()[1]
 
 
 def sigreg_c12(al,chill,fac=1.,md='f'):
-	#report the confidence region +/-1 for chi2
-	#copied from ancient code
-	chim = 1000
-	
-	
-	chil = []
-	for i in range(0,len(chill)):
-		chil.append((chill[i],al[i]))
-		if chill[i] < chim:
-			chim = chill[i]
-			am = al[i]
-			im = i
-	#chim = min(chil)	
-	a1u = 2.
-	a1d = 0
-	a2u = 2.
-	a2d = 0
-	oa = 0
-	ocd = 0
-	s0 = 0
-	s1 = 0
-	for i in range(im+1,len(chil)):
-		chid = chil[i][0] - chim
-		if chid > 1. and s0 == 0:
-			a1u = (chil[i][1]/abs(chid-1.)+oa/abs(ocd-1.))/(1./abs(chid-1.)+1./abs(ocd-1.))
-			s0 = 1
-		if chid > 4. and s1 == 0:
-			a2u = (chil[i][1]/abs(chid-4.)+oa/abs(ocd-4.))/(1./abs(chid-4.)+1./abs(ocd-4.))
-			s1 = 1
-		ocd = chid	
-		oa = chil[i][1]
-	oa = 0
-	ocd = 0
-	s0 = 0
-	s1 = 0
-	for i in range(1,im):
-		chid = chil[im-i][0] - chim
-		if chid > 1. and s0 == 0:
-			a1d = (chil[im-i][1]/abs(chid-1.)+oa/abs(ocd-1.))/(1./abs(chid-1.)+1./abs(ocd-1.))
-			s0 = 1
-		if chid > 4. and s1 == 0:
-			a2d = (chil[im-i][1]/abs(chid-4.)+oa/abs(ocd-4.))/(1./abs(chid-4.)+1./abs(ocd-4.))
-			s1 = 1
-		ocd = chid	
-		oa = chil[im-i][1]
-	if a1u < a1d:
-		a1u = 2.
-		a1d = 0
-	if a2u < a2d:
-		a2u = 2.
-		a2d = 0
-			
-	return am,a1d,a1u,a2d,a2u,chim	
+    #report the confidence region +/-1 for chi2
+    #copied from ancient code
+    chim = 1000
+    
+    
+    chil = []
+    for i in range(0,len(chill)):
+        chil.append((chill[i],al[i]))
+        if chill[i] < chim:
+            chim = chill[i]
+            am = al[i]
+            im = i
+    #chim = min(chil)   
+    a1u = 2.
+    a1d = 0
+    a2u = 2.
+    a2d = 0
+    oa = 0
+    ocd = 0
+    s0 = 0
+    s1 = 0
+    for i in range(im+1,len(chil)):
+        chid = chil[i][0] - chim
+        if chid > 1. and s0 == 0:
+            a1u = (chil[i][1]/abs(chid-1.)+oa/abs(ocd-1.))/(1./abs(chid-1.)+1./abs(ocd-1.))
+            s0 = 1
+        if chid > 4. and s1 == 0:
+            a2u = (chil[i][1]/abs(chid-4.)+oa/abs(ocd-4.))/(1./abs(chid-4.)+1./abs(ocd-4.))
+            s1 = 1
+        ocd = chid  
+        oa = chil[i][1]
+    oa = 0
+    ocd = 0
+    s0 = 0
+    s1 = 0
+    for i in range(1,im):
+        chid = chil[im-i][0] - chim
+        if chid > 1. and s0 == 0:
+            a1d = (chil[im-i][1]/abs(chid-1.)+oa/abs(ocd-1.))/(1./abs(chid-1.)+1./abs(ocd-1.))
+            s0 = 1
+        if chid > 4. and s1 == 0:
+            a2d = (chil[im-i][1]/abs(chid-4.)+oa/abs(ocd-4.))/(1./abs(chid-4.)+1./abs(ocd-4.))
+            s1 = 1
+        ocd = chid  
+        oa = chil[im-i][1]
+    if a1u < a1d:
+        a1u = 2.
+        a1d = 0
+    if a2u < a2d:
+        a2u = 2.
+        a2d = 0
+            
+    return am,a1d,a1u,a2d,a2u,chim  
 
 
 def get_xi0cov():
