@@ -46,9 +46,10 @@ if args.gentemp:
     if args.rectype == None:
         bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
         munw = '0'
-        munw= '1'
+        
     elif 'iso' in args.rectype:
         bf.mkxifile_3dewig(sp=1.,v='n',mun=1,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
+        munw= '1'
 wm = str(args.beta)+str(args.sfog)+str(args.dperp)+str(args.drad)
 mod = np.loadtxt('BAOtemplates/xi0DESI'+wm+'15.0'+munw+'.dat').transpose()[1]
 modsm = np.loadtxt('BAOtemplates/xi0smDESI'+wm+'15.0'+munw+'.dat').transpose()[1]
