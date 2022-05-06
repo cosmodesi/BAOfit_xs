@@ -13,15 +13,17 @@ import pycorr
 parser = argparse.ArgumentParser()
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
+parser.add_argument("--dver", help="data version",default='test')
+parser.add_argument("--njack", help="number of jack knife used",default='60')
+parser.add_argument("--weight", help="weight type used for xi",default='default_FKP')
+parser.add_argument("--reg", help="regions used for xi",default='NScomb_')
 parser.add_argument("--dperp", help="transverse damping; default is about right for z~1",default=4.0,type=float)
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
 parser.add_argument("--beta", help="fiducial beta in template; shouldn't matter for pre-rec",default=0.4,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
-parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
-parser.add_argument("--par", help="do 25 realizations in parallel",default=True,type=bool)
-parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
+parser.add_argument("--rectype", help="type of reconstruction",default=None)
 args = parser.parse_args()
 
 rmin = 50
@@ -41,8 +43,10 @@ if args.gentemp:
 	#beta is b/f, so should be changed depending on tracer
 	#sp is the spacing in Mpc/h of the templates that get written out, most of the rest of the code assumes 1
 	#BAO and nowiggle templates get written out for xi0,xi2,xi4 (2D code reconstructions xi(s,mu) from xi0,xi2,xi4)
-	bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
-
+	if args.rectype == None:
+	    bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
+    elif 'iso' in args.rectype:
+        bf.mkxifile_3dewig(sp=1.,v='n',mun=1,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
 wm = str(args.beta)+str(args.sfog)+str(args.dperp)+str(args.drad)
 mod = np.loadtxt('BAOtemplates/xi0DESI'+wm+'15.00.dat').transpose()[1]
 modsm = np.loadtxt('BAOtemplates/xi0smDESI'+wm+'15.00.dat').transpose()[1]
@@ -141,10 +145,14 @@ def get_xi0cov():
 
 
 
-datadir =  '/global/cfs/cdirs/desi/survey/catalogs/DA02/LSS/guadalupe/LSScats/2/xi/'
+datadir =  '/global/cfs/cdirs/desi/survey/catalogs/DA02/LSS/guadalupe/LSScats/'+args.dataver+'/xi/'
 
 #data = datadir+'xi024LRGDA02_'+str(zmin)+str(zmax)+'2_default_FKPlin'+str(bs)+'.dat'
-data = datadir +'/smu/xipoles_LRG_'+str(zmin)+'_'+str(zmax)+'_default_FKP_lin'+str(bs)+'_njack120.txt'
+if args.rectype == None:
+    data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
+else:
+    data = datadir +'/smu/xipoles_LRG_'+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
+    
 d = np.loadtxt(data).transpose()
 xid = d[2]
 rl = []
@@ -176,9 +184,9 @@ plt.show()
 
 spa=.001
 outdir = os.environ['HOME']+'/DA02baofits/'
-lik = bf.doxi_isolike(xid,covm,mod,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=.4,rminb=50.,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo='LRG'+str(zmin)+str(zmax)+'bosspktemp'+str(bs),diro=outdir)
+lik = bf.doxi_isolike(xid,covm,mod,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=.4,rminb=50.,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo='LRG'+str(zmin)+str(zmax)+wm+str(bs),diro=outdir)
 print('minimum chi2 is '+str(min(lik))+' for '+str(nbin-5)+' dof')
-liksm = bf.doxi_isolike(xid,covm,modsm,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=.4,rminb=50.,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo='LRG'+str(zmin)+str(zmax)+'bosspktempsm'+str(bs),diro=outdir)
+liksm = bf.doxi_isolike(xid,covm,modsm,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=.4,rminb=50.,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo='LRG'+str(zmin)+str(zmax)+wm+str(bs),diro=outdir)
 #print(lik)
 #print(liksm)
 al = [] #list to be filled with alpha values
@@ -199,7 +207,7 @@ plt.legend()
 plt.show()
 
 plt.errorbar(rl,rl**2.*xid,rl**2*diag,fmt='ro')
-fmod = outdir+'ximodLRG'+str(zmin)+str(zmax)+'bosspktemp'+str(bs)+'.dat'
+fmod = outdir+'ximodLRG'+str(zmin)+str(zmax)+wm+str(bs)+'.dat'
 mod = np.loadtxt(fmod).transpose()
 plt.plot(mod[0],mod[0]**2.*mod[1],'k-')
 plt.xlim(20,rmax+10)
