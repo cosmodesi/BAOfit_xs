@@ -13,7 +13,7 @@ import pycorr
 parser = argparse.ArgumentParser()
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
-parser.add_argument("--dver", help="data version",default='test')
+parser.add_argument("--dataver", help="data version",default='test')
 parser.add_argument("--njack", help="number of jack knife used",default='60')
 parser.add_argument("--weight", help="weight type used for xi",default='default_FKP')
 parser.add_argument("--reg", help="regions used for xi",default='NScomb_')
