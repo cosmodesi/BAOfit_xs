@@ -189,6 +189,7 @@ plt.show()
 
 spa=.001
 outdir = os.environ['HOME']+'/DA02baofits/'
+print('doing BAO fit')
 lik = bf.doxi_isolike(xid,covm,mod,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=.4,rminb=50.,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo='LRG'+str(zmin)+str(zmax)+wm+str(bs),diro=outdir)
 print('minimum chi2 is '+str(min(lik))+' for '+str(nbin-5)+' dof')
 print('doing no BAO fit')
