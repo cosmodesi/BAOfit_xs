@@ -152,7 +152,7 @@ datadir =  '/global/cfs/cdirs/desi/survey/catalogs/DA02/LSS/guadalupe/LSScats/'+
 
 #data = datadir+'xi024LRGDA02_'+str(zmin)+str(zmax)+'2_default_FKPlin'+str(bs)+'.dat'
 if args.rectype == None:
-    data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
+    data = datadir +'/smu/xipoles_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
 else:
     data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
     
