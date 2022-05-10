@@ -76,7 +76,8 @@ if args.gentemp:
 #def get_xi0cov():
 if args.gencov:
     znm = str(10*zmin)[:1]+str(10*zmax)[:1]
-    dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/EZmocks/'
+    #dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/EZmocks/'
+    dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/csaulder/'
     fnm = 'EZmock_results_'+znm
     result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+'_1.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
@@ -210,8 +211,8 @@ outdir = os.environ['HOME']+'/DESImockbaofits/'
 if args.pv == 'JM':
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
 if args.pv == 'CS':
-    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
-
+    #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
+    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/csaulder/'
 
 
 def doreal(mn):
