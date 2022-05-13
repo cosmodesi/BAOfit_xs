@@ -122,7 +122,7 @@ def get_xi0cov():
     #fnm = 'xi_lognormal_lrg_sub_'
     fnm = 'xi_ez_LRG_cutsky_seed' #550_z0.6_0.8.npy
     if args.rectype is not None:
-		sys.exit('no recon for EZ mocks yet')
+        sys.exit('no recon for EZ mocks yet')
     xinpy = dirm+fnm+'1'+'_z'+str(args.zmin)+'_'+str(args.zmax)+'.npy'
     result = pycorr.TwoPointCorrelationFunction.load(xinpy)
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
