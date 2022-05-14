@@ -191,7 +191,8 @@ std = np.diag(cov)**0.5
 xid = xiell#d[2]
 rl = []
 nbin = 0
-for i in range(0,len(d[0])):
+#for i in range(0,len(d[0])):
+for i in range(0,len(xid)):
     r = i*bs+bs/2.+binc
     rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) #correct for pairs should have slightly larger average pair distance than the bin center
     rl.append(rbc) 
