@@ -175,9 +175,12 @@ def get_xi0cov():
 datadir =  '/global/cfs/cdirs/desi/survey/catalogs/DA02/LSS/guadalupe/LSScats/'+args.dataver+'/xi/'
 
 #data = datadir+'xi024LRGDA02_'+str(zmin)+str(zmax)+'2_default_FKPlin'+str(bs)+'.dat'
+zw = ''
+if zmin == 0.8 and zmax == 2.1:
+    zw = 'lowz'
 if args.rectype == None:
     #data = datadir +'/smu/xipoles_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
-    data = datadir +'/smu/allcounts_'+args.tracer+'_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin_njack'+args.njack+'.npy'
+    data = datadir +'/smu/allcounts_'+args.tracer+'_'+args.reg+str(zmin)+'_'+str(zmax)+zw+'_'+args.weight+'_lin_njack'+args.njack+'.npy'
 else:
     sys.exit('recon not supported yet')
     #data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
