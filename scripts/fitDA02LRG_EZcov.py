@@ -181,7 +181,7 @@ else:
     sys.exit('recon not supported yet')
     #data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
 
-result = pycorr.TwoPointCorrelationFunction.load(xinpy)
+result = pycorr.TwoPointCorrelationFunction.load(data)
 rebinned = result[:(result.shape[0]//bs)*bs:bs]
 
 s, xiell, cov = result.get_corr(ells=ells, return_sep=True, return_cov=True)
