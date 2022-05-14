@@ -185,7 +185,7 @@ result = pycorr.TwoPointCorrelationFunction.load(data)
 rebinned = result[:(result.shape[0]//bs)*bs:bs]
 
 s, xiell, cov = result.get_corr(ells=ells, return_sep=True, return_cov=True)
-std = np.array_split(np.diag(cov)**0.5, nells)
+std = np.diag(cov)**0.5
     
 #d = np.loadtxt(data).transpose()
 xid = xiell#d[2]
