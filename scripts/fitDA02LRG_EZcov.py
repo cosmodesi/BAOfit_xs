@@ -184,7 +184,7 @@ else:
 result = pycorr.TwoPointCorrelationFunction.load(data)
 rebinned = result[:(result.shape[0]//bs)*bs:bs]
 
-s, xiell, cov = result.get_corr(ells=ells, return_sep=True, return_cov=True)
+s, xiell, cov = rebinned.get_corr(ells=ells, return_sep=True, return_cov=True)
 std = np.diag(cov)**0.5
 print(len(s),len(xiell),len(cov))    
 #d = np.loadtxt(data).transpose()
