@@ -178,6 +178,7 @@ if args.rectype == None:
     #data = datadir +'/smu/xipoles_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
     data = datadir +'/smu/all_counts_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.npy'
 else:
+    sys.exit('recon not supported yet')
     #data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
 
 result = pycorr.TwoPointCorrelationFunction.load(xinpy)
