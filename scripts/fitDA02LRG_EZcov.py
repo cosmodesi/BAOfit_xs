@@ -13,6 +13,9 @@ import pycorr
 parser = argparse.ArgumentParser()
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
+parser.add_argument("--rmin", help="minimum redshift",default=50,type=float)
+parser.add_argument("--rmax", help="maximum redshift",default=150,type=float)
+
 parser.add_argument("--bs", help="bin size in Mpc/h, some integer multiple of 1",default=4,type=int)
 parser.add_argument("--cfac", help="any factor to apply to the cov matrix",default=1,type=float)
 parser.add_argument("--dataver", help="data version",default='test')
@@ -28,8 +31,8 @@ parser.add_argument("--gencov", help="whether or not to generate cov matrix",def
 parser.add_argument("--rectype", help="type of reconstruction",default=None)
 args = parser.parse_args()
 
-rmin = 50
-rmax = 150
+rmin = args.rmin
+rmax = args.rmax
 maxb = 80.
 binc = 0
 
@@ -172,12 +175,19 @@ datadir =  '/global/cfs/cdirs/desi/survey/catalogs/DA02/LSS/guadalupe/LSScats/'+
 
 #data = datadir+'xi024LRGDA02_'+str(zmin)+str(zmax)+'2_default_FKPlin'+str(bs)+'.dat'
 if args.rectype == None:
-    data = datadir +'/smu/xipoles_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
+    #data = datadir +'/smu/xipoles_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
+    data = datadir +'/smu/all_counts_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.npy'
 else:
-    data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
+    #data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
+
+result = pycorr.TwoPointCorrelationFunction.load(xinpy)
+rebinned = result[:(result.shape[0]//bs)*bs:bs]
+
+s, xiell, cov = result.get_corr(ells=ells, return_sep=True, return_cov=True)
+std = np.array_split(np.diag(cov)**0.5, nells)
     
-d = np.loadtxt(data).transpose()
-xid = d[2]
+#d = np.loadtxt(data).transpose()
+xid = xiell#d[2]
 rl = []
 nbin = 0
 for i in range(0,len(d[0])):
@@ -197,7 +207,8 @@ for i in range(0,len(covm)):
     diag.append(np.sqrt(covm[i][i]))
 diag = np.array(diag)
 plt.plot(rl,rl*diag,label='lognormal mocks')
-plt.plot(rl,rl*d[5],label='jack-knife')
+#plt.plot(rl,rl*d[5],label='jack-knife')
+plt.plot(rl,rl*std,label='jack-knife')
 plt.xlabel('s (Mpc/h)')
 plt.ylabel(r's$\sigma$')
 plt.legend()
