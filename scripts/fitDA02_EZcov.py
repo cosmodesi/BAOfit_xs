@@ -45,9 +45,9 @@ bs = args.bs
 if args.acov:
     args.gencov= False
     try:
-        covm = np.loadtxt(os.getenv['HOME']+'ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
+        covm = np.loadtxt(os.environ['HOME']+'ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
     except:
-        sys.exit('failed to load '+os.getenv['HOME']+'ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
+        sys.exit('failed to load '+os.environ['HOME']+'ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
 if args.gentemp:
     #make BAO template given parameters above, using DESI fiducial cosmology and cosmoprimo P(k) tools
     #mun is 0 for pre rec
