@@ -48,7 +48,7 @@ if args.acov:
     try:
         covm = np.loadtxt(os.environ['HOME']+'/ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
     except:
-        sys.exit('failed to load '+os.environ['HOME']+'/ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
+        sys.exit('failed to load '+os.environ['HOME']+'/ximonopole_'+args.tracer+'_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
 if args.gentemp:
     #make BAO template given parameters above, using DESI fiducial cosmology and cosmoprimo P(k) tools
     #mun is 0 for pre rec
@@ -129,7 +129,7 @@ ells = 0
 def get_xi0cov():
     
     #dirm = '/global/project/projectdirs/desi/users/dvalcin/Mocks/2PCF/'
-    dirm = '/global/project/projectdirs/desi/users/dvalcin/EZMOCKS/'+args.tracer+'/Xi/'
+    dirm = '/global/cfs/cdirs/desi/users/dvalcin/EZMOCKS/'+args.tracer+'/Xi/'
     #fnm = 'xi_lognormal_lrg_sub_'
     fnm = 'xi_ez_'+args.tracer+'_cutsky_seed' #550_z0.6_0.8.npy
     if args.rectype is not None:
