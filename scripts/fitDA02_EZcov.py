@@ -29,6 +29,7 @@ parser.add_argument("--sfog", help="streaming velocity term; default standardish
 parser.add_argument("--beta", help="fiducial beta in template; shouldn't matter for pre-rec",default=0.4,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
+parser.add_argument("--acov", help="whether or not to to analytic cov",default=False,type=bool)
 parser.add_argument("--rectype", help="type of reconstruction",default=None)
 args = parser.parse_args()
 
@@ -41,7 +42,12 @@ zmin = args.zmin
 zmax = args.zmax
 bs = args.bs
 
-
+if args.acov:
+    args.gencov= False
+    try:
+        covm = np.loadtxt(os.getenv['HOME']+'ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
+    except:
+        sys.exit('failed to load '+os.getenv['HOME']+'ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
 if args.gentemp:
     #make BAO template given parameters above, using DESI fiducial cosmology and cosmoprimo P(k) tools
     #mun is 0 for pre rec
