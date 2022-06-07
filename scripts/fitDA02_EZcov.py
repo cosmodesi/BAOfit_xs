@@ -153,28 +153,30 @@ def get_xi0cov():
         nr = str(i)
         #xii = np.loadtxt(dirm+fnm+nr+'.txt').transpose()
         xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
-        result = pycorr.TwoPointCorrelationFunction.load(xinpy)
-        rebinned = result[:(result.shape[0]//bs)*bs:bs]
-        xic = rebinned(ells=ells)
+        if os.path.isfile(xinpy):
+            result = pycorr.TwoPointCorrelationFunction.load(xinpy)
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            xic = rebinned(ells=ells)
 
-        xiave += xic
-        Ntot += 1.
+            xiave += xic
+            Ntot += 1.
     print( Ntot)        
     xiave = xiave/float(Ntot)
     for i in range(1,Nmock):
         nr = str(i)
         xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
-        result = pycorr.TwoPointCorrelationFunction.load(xinpy)
-        rebinned = result[:(result.shape[0]//bs)*bs:bs]
-        xic = rebinned(ells=ells)
+        if os.path.isfile(xinpy):
+            result = pycorr.TwoPointCorrelationFunction.load(xinpy)
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            xic = rebinned(ells=ells)
 
-        #xii = np.loadtxt(dirm+fnm+nr+'.txt').transpose()
-        #xic = xii[1]
-        for j in range(0,nbin):
-            xij = xic[j]#-angfac*xiit[j]
-            for k in range(0,nbin):
-                xik = xic[k]#-angfac*xiit[k]
-                cov[j][k] += (xij-xiave[j])*(xik-xiave[k])
+            #xii = np.loadtxt(dirm+fnm+nr+'.txt').transpose()
+            #xic = xii[1]
+            for j in range(0,nbin):
+                xij = xic[j]#-angfac*xiit[j]
+                for k in range(0,nbin):
+                    xik = xic[k]#-angfac*xiit[k]
+                    cov[j][k] += (xij-xiave[j])*(xik-xiave[k])
 
     cov = cov/float(Ntot)                   
         
