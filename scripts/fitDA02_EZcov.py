@@ -173,7 +173,7 @@ def get_xi0cov():
         xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
         if os.path.isfile(xinpy):
             result = pycorr.TwoPointCorrelationFunction.load(xinpy)
-            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            rebinned = result[:(result.shape[0]//rbs)*rbs:rbs]
             xic = rebinned(ells=ells)
 
             #xii = np.loadtxt(dirm+fnm+nr+'.txt').transpose()
