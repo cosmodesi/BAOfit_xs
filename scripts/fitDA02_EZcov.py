@@ -140,7 +140,7 @@ def get_xi0cov():
     xinpy = dirm+fnm+'1'+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
     result = pycorr.TwoPointCorrelationFunction.load(xinpy)
     rbs = bs
-    if args.tracer[:3] == 'BGS'
+    if args.tracer[:3] == 'BGS':
         rbs = bs//4
         print('mock rebinning factor is '+str(rbs))
         if bs//4 != bs/4:
