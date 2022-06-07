@@ -132,9 +132,12 @@ def get_xi0cov():
     dirm = '/global/cfs/cdirs/desi/users/dvalcin/EZMOCKS/'+args.tracer[:3]+'/Xi/'
     #fnm = 'xi_lognormal_lrg_sub_'
     fnm = 'xi_ez_'+args.tracer[:3]+'_cutsky_seed' #550_z0.6_0.8.npy
+    fkpw = ''
+    if 'FKP' in args.weight:
+        fkpw = '_fkp'
     if args.rectype is not None:
         sys.exit('no recon for EZ mocks yet')
-    xinpy = dirm+fnm+'1'+'_z'+str(args.zmin)+'_'+str(args.zmax)+'.npy'
+    xinpy = dirm+fnm+'1'+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
     result = pycorr.TwoPointCorrelationFunction.load(xinpy)
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
     xin0 = rebinned(ells=ells)
@@ -149,7 +152,7 @@ def get_xi0cov():
     for i in range(1,Nmock):
         nr = str(i)
         #xii = np.loadtxt(dirm+fnm+nr+'.txt').transpose()
-        xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+'.npy'
+        xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
         result = pycorr.TwoPointCorrelationFunction.load(xinpy)
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic = rebinned(ells=ells)
@@ -160,7 +163,7 @@ def get_xi0cov():
     xiave = xiave/float(Ntot)
     for i in range(1,Nmock):
         nr = str(i)
-        xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+'.npy'
+        xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
         result = pycorr.TwoPointCorrelationFunction.load(xinpy)
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic = rebinned(ells=ells)
