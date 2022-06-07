@@ -139,7 +139,13 @@ def get_xi0cov():
         sys.exit('no recon for EZ mocks yet')
     xinpy = dirm+fnm+'1'+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
     result = pycorr.TwoPointCorrelationFunction.load(xinpy)
-    rebinned = result[:(result.shape[0]//bs)*bs:bs]
+    rbs = bs
+    if args.tracer[:3] == 'BGS'
+        rbs = bs//4
+        print('mock rebinning factor is '+str(rbs))
+        if bs//4 != bs/4:
+            sys.exit('BGS mocks used 4mpc binning')
+    rebinned = result[:(result.shape[0]//rbs)*rbs:rbs]
     xin0 = rebinned(ells=ells)
 
     nbin = len(xin0)
@@ -155,7 +161,7 @@ def get_xi0cov():
         xinpy = dirm+fnm+nr+'_z'+str(args.zmin)+'_'+str(args.zmax)+fkpw+'.npy'
         if os.path.isfile(xinpy):
             result = pycorr.TwoPointCorrelationFunction.load(xinpy)
-            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            rebinned = result[:(result.shape[0]//rbs)*rbs:rbs]
             xic = rebinned(ells=ells)
 
             xiave += xic
