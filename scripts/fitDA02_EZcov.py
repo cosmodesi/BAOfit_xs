@@ -20,6 +20,7 @@ parser.add_argument("--rmax", help="maximum redshift",default=150,type=float)
 
 parser.add_argument("--bs", help="bin size in Mpc/h, some integer multiple of 1",default=4,type=int)
 parser.add_argument("--cfac", help="any factor to apply to the cov matrix",default=1,type=float)
+parser.add_argument("--diagfac", help="apply a factor to only the diagonal of the cov matrix",default=1,type=float)
 parser.add_argument("--dataver", help="data version",default='test')
 parser.add_argument("--njack", help="number of jack knife used",default='60')
 parser.add_argument("--weight", help="weight type used for xi",default='default')
@@ -229,6 +230,7 @@ cfac = args.cfac#5/4
 covm *= cfac**2.
 diag = []
 for i in range(0,len(covm)):
+    covm[i][i] *= args.diagfac
     diag.append(np.sqrt(covm[i][i]))
 diag = np.array(diag)
 plt.plot(rl,rl*diag,label='mocks')
