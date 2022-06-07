@@ -129,9 +129,9 @@ ells = 0
 def get_xi0cov():
     
     #dirm = '/global/project/projectdirs/desi/users/dvalcin/Mocks/2PCF/'
-    dirm = '/global/cfs/cdirs/desi/users/dvalcin/EZMOCKS/'+args.tracer+'/Xi/'
+    dirm = '/global/cfs/cdirs/desi/users/dvalcin/EZMOCKS/'+args.tracer[:3]+'/Xi/'
     #fnm = 'xi_lognormal_lrg_sub_'
-    fnm = 'xi_ez_'+args.tracer+'_cutsky_seed' #550_z0.6_0.8.npy
+    fnm = 'xi_ez_'+args.tracer[:3]+'_cutsky_seed' #550_z0.6_0.8.npy
     if args.rectype is not None:
         sys.exit('no recon for EZ mocks yet')
     xinpy = dirm+fnm+'1'+'_z'+str(args.zmin)+'_'+str(args.zmax)+'.npy'
@@ -220,7 +220,7 @@ diag = []
 for i in range(0,len(covm)):
     diag.append(np.sqrt(covm[i][i]))
 diag = np.array(diag)
-plt.plot(rl,rl*diag,label='lognormal mocks')
+plt.plot(rl,rl*diag,label='mocks')
 #plt.plot(rl,rl*d[5],label='jack-knife')
 plt.plot(rl,rl*std,label='jack-knife')
 plt.xlabel('s (Mpc/h)')
