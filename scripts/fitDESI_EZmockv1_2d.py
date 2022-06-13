@@ -14,11 +14,13 @@ import argparse
 import pycorr
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--tracer",help="the tracer type",default='LRG')
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
 parser.add_argument("--dperp", help="transverse damping; default is about right for z~1",default=4.0,type=float)
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
+parser.add_argument("--beta", help="f/b assumed for templated generation",default=0.4,type=float)
 
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
@@ -54,6 +56,7 @@ nbt = int(2*(rmax-rmin)/bs)
 sfog = args.sfog #fog velocity term, 3 is kind of cannonical
 dperp = args.dperp # 
 drad = args.drad # 
+beta = args.beta
 
 Nmock = 1000
 
@@ -68,18 +71,29 @@ Nmock = 1000
 
 
 if args.gentemp:
-    bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=0.4,sfog=sfog,sigt=dperp,sigr=drad,sigs=15.)
+    bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=beta,sfog=sfog,sigt=dperp,sigr=drad,sigs=15.)
 
 #sys.exit()
 
 #make covariance matrix from EZ mocks
 #def get_xi0cov():
 if args.gencov:
-    znm = str(10*zmin)[:1]+str(10*zmax)[:1]
+    
     #dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/EZmocks/'
-    dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/csaulder/'
-    fnm = 'EZmock_results_'+znm
-    result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+'_1.npy')
+    if args.tracer == 'LRG':
+        znm = str(10*zmin)[:1]+str(10*zmax)[:1]
+        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/csaulder/'
+        fnm = dirm+'EZmock_results_'+znm+'_'
+    if args.tracer == 'ELG':
+        if zmin == 0.6:
+            zbin = '1'
+        if zmin == 0.8:
+            zbin = '2'
+        if zmin == 1.1:
+            zbmin = '3'
+        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/ELG/Xi/lhior/pycorr_format/'
+        fnm = dirm + 'Xi_bin_'+zbin+'_cutsky_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed' 
+    result = pycorr.TwoPointCorrelationFunction.load(fnm+'1.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
     ells = (0, 2)
     s, xiell = rebinned(ells=ells, return_sep=True)
@@ -112,8 +126,8 @@ if args.gencov:
     Ntot = 0
     fac = 1.
     for i in range(1,Nmock+1):
-        nr = '_'+str(i)
-        result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+nr+'.npy')
+        nr = str(i)
+        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic0 = rebinned(ells=ells)[0][indmin:indmax]
         xic2 = rebinned(ells=ells)[1][indmin:indmax]
@@ -128,8 +142,8 @@ if args.gencov:
     xiave = xiave/float(Ntot)
     xiaveb = xiaveb/float(Ntot)
     for i in range(1,Nmock+1):
-        nr = '_'+str(i)
-        result = pycorr.TwoPointCorrelationFunction.load(dirm+fnm+nr+'.npy')
+        nr = str(i)
+        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic0 = rebinned(ells=ells)[0][indmin:indmax]
         xic2 = rebinned(ells=ells)[1][indmin:indmax]
@@ -193,8 +207,8 @@ if args.gencov:
         rlb.append(rbc) 
 
 
-wm = str(sfog)+str(dperp)+str(drad)
-mod = 'DESI0.4'+wm+'15.00.dat'
+wm = str(beta)+str(sfog)+str(dperp)+str(drad)
+mod = 'DESI'+wm+'15.00.dat'
 
 
 #bias priors, log around best fit up to rmaxb
@@ -213,7 +227,8 @@ if args.pv == 'JM':
 if args.pv == 'CS':
     #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/csaulder/'
-
+if args.pv == 'ELG':
+    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian'
 
 def doreal(mn):
     if args.pv == 'CS':
@@ -224,6 +239,21 @@ def doreal(mn):
         #xid0b = xis[2][indmin:indmaxb]
         #xid2b = xis[3][indmin:indmaxb]
        fnm = 'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.npy'
+       result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+       rebinned = result[:(result.shape[0]//bs)*bs:bs]
+       ells = (0, 2)
+       s, xiell = rebinned(ells=ells, return_sep=True)
+ 
+       xid0 = xiell[0][indmin:indmax]
+       xid2 = xiell[1][indmin:indmax]
+#       
+       xid0b = xiell[0][indmin:indmaxb]
+       xid2b = xiell[1][indmin:indmaxb]
+    
+    if args.pv == 'ELG':
+       if zmin == 0.8:
+           zw = '0p8_1p1'
+       fnm = 'z_'+zw+'_cutsky_ELG_ph'+str(mn).zfill(3)+'.npy'
        result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
        rebinned = result[:(result.shape[0]//bs)*bs:bs]
        ells = (0, 2)
@@ -265,7 +295,7 @@ if dofit:
 
 #compile stats
 Nmock = 25
-foutall = outdir+'AperpAparfits_LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
+foutall = outdir+'AperpAparfits_'+args.tracer+'abcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
 fo = open(foutall,'w')
 fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
 for ii in range(0,Nmock):
