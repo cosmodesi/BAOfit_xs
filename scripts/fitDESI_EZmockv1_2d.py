@@ -25,7 +25,7 @@ parser.add_argument("--beta", help="f/b assumed for templated generation",defaul
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
-parser.add_argument("--par", help="do 25 realizations in parallel",default=True,type=bool)
+parser.add_argument("--par", help="do 25 realizations in parallel",default=False,type=bool)
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
 args = parser.parse_args()
 
@@ -228,7 +228,7 @@ if args.pv == 'CS':
     #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/csaulder/'
 if args.pv == 'ELG':
-    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian'
+    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian/'
 
 def doreal(mn):
     if args.pv == 'CS':
