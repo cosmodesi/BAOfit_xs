@@ -25,7 +25,7 @@ parser.add_argument("--beta", help="f/b assumed for templated generation",defaul
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
-parser.add_argument("--par", help="do 25 realizations in parallel",default=False,type=bool)
+parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
 args = parser.parse_args()
 
@@ -283,7 +283,7 @@ def doreal(mn):
     #plt.show()
 
 if dofit:
-    if args.par:
+    if args.par == 'y':
         from multiprocessing import Pool
         N = 25
         p = Pool(N)
