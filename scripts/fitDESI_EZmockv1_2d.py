@@ -283,6 +283,7 @@ def doreal(mn):
     #plt.show()
 
 if dofit:
+    print(args.par)
     if args.par == 'y':
         from multiprocessing import Pool
         N = 25
