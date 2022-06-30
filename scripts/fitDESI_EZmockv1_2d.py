@@ -71,7 +71,7 @@ Nmock = 1000
 
 
 if args.gentemp:
-    bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=beta,sfog=sfog,sigt=dperp,sigr=drad,sigs=15.)
+    bf.mkxifile_3dewig(sp=1.,v='y',mun=0,beta=beta,sfog=sfog,sigt=dperp,sigr=drad,sigs=15.)
 
 #sys.exit()
 
