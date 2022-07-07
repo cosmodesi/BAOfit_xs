@@ -220,7 +220,7 @@ for i in range(0,len(xid)):
 rl = np.array(rl)
 print(rl)
 print(xid)
-if args.gencov:
+if args.cov_type != 'theory':
     covm = get_xi0cov() #will become covariance matrix to be used with data vector
 cfac = args.cfac#5/4
 covm *= cfac**2.
