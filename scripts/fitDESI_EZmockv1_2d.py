@@ -243,7 +243,7 @@ if args.pv == 'ELG':
 
 tw = ''
 if args.HOD != None:
-    tw = HOD+str(args.HOD)
+    tw = 'HOD'+str(args.HOD)
 
 def doreal(mn):
     if args.tracer == 'LRG':
