@@ -273,7 +273,7 @@ def doreal(mn):
     
     if args.tracer == 'LRGcubic':
 
-        if args.HOD == None
+        if args.HOD == None:
            fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
            
         else:
