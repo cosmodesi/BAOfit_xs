@@ -24,6 +24,7 @@ parser.add_argument("--beta", help="f/b assumed for templated generation",defaul
 
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
+parser.add_argument("--HOD", help="whether or not to generate cov matrix",default=None)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
 parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
@@ -84,6 +85,9 @@ if args.gencov:
         znm = str(10*zmin)[:1]+str(10*zmax)[:1]
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/csaulder/'
         fnm = dirm+'EZmock_results_'+znm+'_'
+    if args.tracer == 'LRGcubic':
+        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/LRG/Xi/jmena/pycorr_format/'
+        fnm = dirm+'Xi_EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
     if args.tracer == 'ELG':
         if zmin == 0.6:
             zbin = '1'
@@ -222,33 +226,70 @@ outdir = os.environ['HOME']+'/DESImockbaofits/'
 
 
 
-if args.pv == 'JM':
-    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
-if args.pv == 'CS':
-    #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
-    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/csaulder/'
+if args.tracer == 'LRG':
+    if args.pv == 'JM':
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
+    if args.pv == 'CS':
+        #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/csaulder/'
+
+if args.tracer == 'LRGcubic':
+    if args.HOD == None:
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/LRG/Xi/Pre/jmena/pycorr_format/'
+    else:
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/LRG/Xi/Pre/jmena/HOD_tests/pycorr_format/'
 if args.pv == 'ELG':
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian/'
 
 def doreal(mn):
-    if args.pv == 'CS':
-        #fnm = abdir+'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.dat'
-        #xis = np.loadtxt(fnm).transpose()
-        #xid0 = xis[2][indmin:indmax]
-        #xid2 = xis[3][indmin:indmax]
-        #xid0b = xis[2][indmin:indmaxb]
-        #xid2b = xis[3][indmin:indmaxb]
-       fnm = 'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.npy'
+    if args.tracer == 'LRG':
+        if args.pv == 'CS':
+            #fnm = abdir+'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.dat'
+            #xis = np.loadtxt(fnm).transpose()
+            #xid0 = xis[2][indmin:indmax]
+            #xid2 = xis[3][indmin:indmax]
+            #xid0b = xis[2][indmin:indmaxb]
+            #xid2b = xis[3][indmin:indmaxb]
+           fnm = 'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.npy'
+           result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+           rebinned = result[:(result.shape[0]//bs)*bs:bs]
+           ells = (0, 2)
+           s, xiell = rebinned(ells=ells, return_sep=True)
+ 
+           xid0 = xiell[0][indmin:indmax]
+           xid2 = xiell[1][indmin:indmax]
+    #       
+           xid0b = xiell[0][indmin:indmaxb]
+           xid2b = xiell[1][indmin:indmaxb]
+
+    
+        if args.pv == 'JM':
+            xid0 = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
+            xid2 = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
+
+            xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
+            xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
+
+    
+    if args.tracer == 'LRGcubic':
+
+        if args.HOD == None
+           fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
+           
+        else:
+           tw = HOD+str(args.HOD)
+           fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
        result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
        rebinned = result[:(result.shape[0]//bs)*bs:bs]
        ells = (0, 2)
        s, xiell = rebinned(ells=ells, return_sep=True)
- 
+
        xid0 = xiell[0][indmin:indmax]
        xid2 = xiell[1][indmin:indmax]
 #       
        xid0b = xiell[0][indmin:indmaxb]
        xid2b = xiell[1][indmin:indmaxb]
+
     
     if args.pv == 'ELG':
        if zmin == 0.8:
@@ -265,16 +306,10 @@ def doreal(mn):
        xid0b = xiell[0][indmin:indmaxb]
        xid2b = xiell[1][indmin:indmaxb]
 
-    if args.pv == 'JM':
-        xid0 = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
-        xid2 = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
-
-        xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
-        xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
 
     xid = np.concatenate((xid0,xid2))
     xidb = np.concatenate((xid0b,xid2b))    
-    fout = 'LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)
+    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)
     bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir)
     #bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
     #modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
@@ -296,11 +331,11 @@ if dofit:
 
 #compile stats
 Nmock = 25
-foutall = outdir+'AperpAparfits_'+args.tracer+'abcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
+foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
 fo = open(foutall,'w')
 fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
 for ii in range(0,Nmock):
-    fout = 'LRGabcutsky0_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)
+    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)
     ans = bf.sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
     fo.write(str(ii)+' ')
     for val in ans:
