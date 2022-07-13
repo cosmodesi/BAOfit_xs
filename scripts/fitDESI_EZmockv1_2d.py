@@ -245,7 +245,7 @@ tw = ''
 if args.HOD != None:
     tw = HOD+str(args.HOD)
 
-def doreal(mn,tw):
+def doreal(mn):
     if args.tracer == 'LRG':
         if args.pv == 'CS':
             #fnm = abdir+'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.dat'
