@@ -241,6 +241,8 @@ if args.tracer == 'LRGcubic':
 if args.pv == 'ELG':
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian/'
 
+tw = ''
+
 def doreal(mn):
     if args.tracer == 'LRG':
         if args.pv == 'CS':
