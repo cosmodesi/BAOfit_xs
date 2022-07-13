@@ -242,8 +242,10 @@ if args.pv == 'ELG':
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian/'
 
 tw = ''
+if args.HOD != None:
+    tw = HOD+str(args.HOD)
 
-def doreal(mn):
+def doreal(mn,tw):
     if args.tracer == 'LRG':
         if args.pv == 'CS':
             #fnm = abdir+'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.dat'
@@ -279,7 +281,7 @@ def doreal(mn):
            fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
            
         else:
-           tw = HOD+str(args.HOD)
+           #tw = HOD+str(args.HOD)
            fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
         result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
