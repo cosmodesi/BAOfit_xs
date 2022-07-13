@@ -279,16 +279,16 @@ def doreal(mn):
         else:
            tw = HOD+str(args.HOD)
            fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
-       result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-       rebinned = result[:(result.shape[0]//bs)*bs:bs]
-       ells = (0, 2)
-       s, xiell = rebinned(ells=ells, return_sep=True)
+        result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+        rebinned = result[:(result.shape[0]//bs)*bs:bs]
+        ells = (0, 2)
+        s, xiell = rebinned(ells=ells, return_sep=True)
 
-       xid0 = xiell[0][indmin:indmax]
-       xid2 = xiell[1][indmin:indmax]
+        xid0 = xiell[0][indmin:indmax]
+        xid2 = xiell[1][indmin:indmax]
 #       
-       xid0b = xiell[0][indmin:indmaxb]
-       xid2b = xiell[1][indmin:indmaxb]
+        xid0b = xiell[0][indmin:indmaxb]
+        xid2b = xiell[1][indmin:indmaxb]
 
     
     if args.pv == 'ELG':
