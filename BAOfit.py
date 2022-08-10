@@ -66,7 +66,7 @@ def mkxivec_3dewig(rl,v='n',mun=0,beta=0.4,sfog=0,sigz=0,sigt=6.,sigr=10.,sigs=1
     rout,xiout2sm = HankelTransform(k,psm2,q=1.5,mu=2.5,output_r=rl,output_r_power=-3,r0=10.)
     rout,xiout4sm = HankelTransform(k,psm4,q=1.5,mu=4.5,output_r=rl,output_r_power=-3,r0=10.)
     
-    return rout,xiout0,xiout2,xiout4,xiout0sm,xiout2sm,xiout4sm
+    return rout,xiout0/(5.*pi),xiout2/(-5.*pi),xiout4/(5.*pi),xiout0sm/(5.*pi),xiout2sm/(-5.*pi),xiout4sm/(5.*pi)
 
 
 
@@ -245,7 +245,7 @@ def pk3elldfile_dewig(beta=0.4,sigt=3.0,sigr=3.0,sfog=3.5,mun=1.,sigs=15.,sigz=0
         psm0l.append(pksm0)
         psm2l.append(pksm2)
         psm4l.append(pksm4)
-        print(pk0,pksm0,dpk)
+        #print(pk0,pksm0,dpk)
 
         if pw == 'y':
             fo.write(str(k)+' '+str(pk0)+' '+str(pk2)+' '+str(pk4)+' '+str(pksm0)+' '+str(pksm2)+' '+str(pksm4)+' '+str(pk)+' '+str(pksm)+'\n')
