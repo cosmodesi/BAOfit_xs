@@ -37,6 +37,38 @@ def findPolya(H,ci,d):
     comb = np.dot(np.dot(onei,H),ci)
     return np.dot(comb,d)
 
+def mkxivec_3dewig(rl,v='n',mun=0,beta=0.4,sfog=0,sigz=0,sigt=6.,sigr=10.,sigs=15.):
+    '''
+    return xi0,xi2,xi4 BAO and no BAO vectors; useful for consistency checks
+    the templates are linear+BAO damping with bias = 1 at z = 0
+    just multiply by (bD[z])^2 and amplitudes should be consistent with chosen linear bias at redshift z
+    variables:
+    rl is array with the s bin centers in Mpc/h
+    v is printing things, right now only r
+    pkfile is input linear P(k)
+    mun = 0 for pre rec and 1 for post-rec with RSD removal (controls effect of smoothing scaling on RSD)
+    beta is fiducial f/b
+    sfog: the streaming velocity parameter, often denoted Sigma_s
+    sigz: for redshift uncertainties, ignore for most cases
+    sigt: transverse BAO damping, Sigma_\perp
+    sigr: radial BAO damping, Sigma_||
+    sigs: smoothing scale used in reconstruction (irrelevant if mun = 0)
+    '''
+    #generate power spectra 
+    k,pl0,pl2,pl4,psm0,psm2,psm4 = pk3elldfile_dewig(beta=beta,sfog=sfog,sigz=sigz,sigt=sigt,sigr=sigr,mun=mun,sigs=sigs,pw=v)    
+    #open files for writing
+    #transform to get xi 
+    rout,xiout0 = HankelTransform(k,pl0,q=1.5,mu=0.5,output_r=rl,output_r_power=-3,r0=10.)
+    rout,xiout2 = HankelTransform(k,pl2,q=1.5,mu=2.5,output_r=rl,output_r_power=-3,r0=10.)
+    rout,xiout4 = HankelTransform(k,pl4,q=1.5,mu=4.5,output_r=rl,output_r_power=-3,r0=10.)
+    #sm are no BAO templates
+    rout,xiout0sm = HankelTransform(k,psm0,q=1.5,mu=0.5,output_r=rl,output_r_power=-3,r0=10.)
+    rout,xiout2sm = HankelTransform(k,psm2,q=1.5,mu=2.5,output_r=rl,output_r_power=-3,r0=10.)
+    rout,xiout4sm = HankelTransform(k,psm4,q=1.5,mu=4.5,output_r=rl,output_r_power=-3,r0=10.)
+    
+    return rout,xiout0,xiout2,xiout4,xiout0sm,xiout2sm,xiout4sm
+
+
 
 def mkxifile_3dewig(sp=1.,v='y',mun=0,beta=0.4,sfog=0,sigz=0,sigt=6.,sigr=10.,sigs=15.):
     '''
