@@ -50,7 +50,7 @@ bs = args.bs
 
 if args.cov_type=='theory':
     #args.gencov= False
-    fn = '/global/cfs/cdirs/desi/survey/catalogs/edav1/xi/da02/smu/cov/ximonopole_'+args.tracer+'_NScomb_'+args.zmin+'_'+args.zmax+'_'+args.weight+'_lin'+args.bs+'_cov_RascalC.txt'
+    fn = '/global/cfs/cdirs/desi/survey/catalogs/edav1/xi/da02/smu/cov/ximonopole_'+args.tracer+'_NScomb_'+str(args.zmin)+'_'+str(args.zmax)+'_'+args.weight+'_lin'+str(args.bs)+'_cov_RascalC.txt'
     try:
         
         covm = np.loadtxt(fn)
