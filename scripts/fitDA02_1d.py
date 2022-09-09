@@ -237,7 +237,7 @@ if args.cov_type != 'theory':
 cfac = args.cfac#5/4
 covm *= cfac**2.
 diag = []
-for i in range(0,len(covm)):
+for i in range(bin_start,len(covm)):
     diag.append(np.sqrt(covm[i][i]))
 diag = np.array(diag)
 plt.plot(rl,rl*diag,label='used for fit')
