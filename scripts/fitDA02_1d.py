@@ -32,7 +32,7 @@ parser.add_argument("--gentemp", help="whether or not to generate BAO templates"
 parser.add_argument("--cov_type",help="how cov matrix was generated; choices are 'theory','EZ',or 'LN'",default='EZ')
 parser.add_argument("--input_dir",help="where to find paircounts if not from the DA directory",default=None)
 parser.add_argument("--nran",help="string for file name denoting the number of random files used",default='_nran10')
-parser.add_argument("--splie",help="string for file name denoting where randoms were split for RR counts",default='_split20')
+parser.add_argument("--split",help="string for file name denoting where randoms were split for RR counts",default='_split20')
 
 #parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
 #parser.add_argument("--acov", help="whether or not to to analytic cov",default=False,type=bool)
