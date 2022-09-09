@@ -30,6 +30,10 @@ parser.add_argument("--sfog", help="streaming velocity term; default standardish
 parser.add_argument("--beta", help="fiducial beta in template; shouldn't matter for pre-rec",default=0.4,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--cov_type",help="how cov matrix was generated; choices are 'theory','EZ',or 'LN'",default='EZ')
+parser.add_argument("--input_dir",help="where to find paircounts if not from the DA directory",default=None)
+parser.add_argument("--nran",help="string for file name denoting the number of random files used",default='_nran10')
+parser.add_argument("--splie",help="string for file name denoting where randoms were split for RR counts",default='_split20')
+
 #parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
 #parser.add_argument("--acov", help="whether or not to to analytic cov",default=False,type=bool)
 parser.add_argument("--rectype", help="type of reconstruction",default=None)
@@ -186,16 +190,17 @@ def get_xi0cov(md='EZ'):
     return cov
 
 
-
-datadir =  '/global/cfs/cdirs/desi/survey/catalogs/DA02/LSS/guadalupe/LSScats/'+args.dataver+'/xi/'
-
+if args.input_dir == None:
+    datadir =  '/global/cfs/cdirs/desi/survey/catalogs/edav1/xi/da02/'
+else:
+    datadir = args.input_dir
 #data = datadir+'xi024LRGDA02_'+str(zmin)+str(zmax)+'2_default_FKPlin'+str(bs)+'.dat'
 zw = ''
 if zmin == 0.8 and zmax == 2.1:
     zw = 'lowz'
 if args.rectype == None:
     #data = datadir +'/smu/xipoles_LRG_'+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
-    data = datadir +'/smu/allcounts_'+args.tracer+'_'+args.reg+str(zmin)+'_'+str(zmax)+zw+'_'+args.weight+'_lin_njack'+args.njack+'.npy'
+    data = datadir +'/smu/allcounts_'+args.tracer+'_'+args.reg+str(zmin)+'_'+str(zmax)+zw+'_'+args.weight+'_lin_njack'+args.njack+args.nran+args.split+'.npy'
 else:
     sys.exit('recon not supported yet')
     #data = datadir +'/smu/xipoles_LRG_'+args.rectype+args.reg+str(zmin)+'_'+str(zmax)+'_'+args.weight+'_lin'+str(bs)+'_njack'+args.njack+'.txt'
@@ -228,13 +233,13 @@ diag = []
 for i in range(0,len(covm)):
     diag.append(np.sqrt(covm[i][i]))
 diag = np.array(diag)
-plt.plot(rl,rl*diag,label='lognormal mocks')
+plt.plot(rl,rl*diag,label='used for fit')
 #plt.plot(rl,rl*d[5],label='jack-knife')
-plt.plot(rl,rl*std,label='jack-knife')
+plt.plot(rl,rl*std,label='jack-knife from paircounts')
 plt.xlabel('s (Mpc/h)')
 plt.ylabel(r's$\sigma$')
 plt.legend()
-plt.title('apply a factor '+str(round(cfac,2))+' to the mock error')
+plt.title('apply a factor '+str(round(cfac,2))+' to the mock/theory error')
 plt.show()
 
 
