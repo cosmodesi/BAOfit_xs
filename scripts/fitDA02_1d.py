@@ -51,12 +51,10 @@ bs = args.bs
 if args.cov_type=='theory':
     #args.gencov= False
     try:
-        if args.tracer == 'LRG':
-            covm = np.loadtxt(os.environ['HOME']+'/ximonopole_LRG_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
-        if args.tracer == 'BGS_BRIGHT-21.5':
-            covm = np.loadtxt('/global/cfs/cdirs/desi/survey/catalogs/DA02/LSS/guadalupe/LSScats/2.1/BGSsubcats/xi/smu/ximonopole_BGS_BRIGHT-21.5_NScomb_0.1_0.5_only_FKP_lin4_cov_RascalC.txt')
+        fn = '/global/cfs/cdirs/desi/survey/catalogs/edav1/xi/da02/smu/cov/ximonopole_'+args.tracer+'_NScomb_'+args.zmin+'_'+args.zmax+'_'+args.weight+'_lin'+args.bs+'_cov_RascalC.txt'
+        covm = np.loadtxt()
     except:
-        sys.exit('failed to load '+os.environ['HOME']+'/ximonopole_'+args.tracer+'_NScomb_0.4_1.1_lin4_cov_RascalC.txt')
+        sys.exit('failed to load '+fn)
 
 if args.gentemp:
     #make BAO template given parameters above, using DESI fiducial cosmology and cosmoprimo P(k) tools
@@ -209,6 +207,14 @@ result = pycorr.TwoPointCorrelationFunction.load(data)
 rebinned = result[:(result.shape[0]//bs)*bs:bs]
 
 s, xiell, cov = rebinned.get_corr(ells=ells, return_sep=True, return_cov=True)
+s_start = 0
+#below needed because cov matrix starts at s = 20
+if args.cov_type == 'theory':
+    s_start = 20
+    bin_start = s_start//bs
+    print('removing '+str(bin_start)+' bins from the beginning of the data vector')
+    s = s[bin_start:]
+    xiell = xiell[bin_start:]
 std = np.diag(cov)**0.5
 print(len(s),len(xiell),len(cov))    
 #d = np.loadtxt(data).transpose()
@@ -217,7 +223,7 @@ rl = []
 nbin = 0
 #for i in range(0,len(d[0])):
 for i in range(0,len(xid)):
-    r = i*bs+bs/2.+binc
+    r = i*bs+bs/2.+binc+s_start
     rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) #correct for pairs should have slightly larger average pair distance than the bin center
     rl.append(rbc) 
     if rbc > rmin and rbc < rmax:
