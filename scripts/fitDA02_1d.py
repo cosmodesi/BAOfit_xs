@@ -208,6 +208,7 @@ result = pycorr.TwoPointCorrelationFunction.load(data)
 rebinned = result[:(result.shape[0]//bs)*bs:bs]
 
 s, xiell, cov = rebinned.get_corr(ells=ells, return_sep=True, return_cov=True)
+std = np.diag(cov)**0.5
 s_start = 0
 #below needed because cov matrix starts at s = 20
 if args.cov_type == 'theory':
@@ -216,7 +217,9 @@ if args.cov_type == 'theory':
     print('removing '+str(bin_start)+' bins from the beginning of the data vector')
     s = s[bin_start:]
     xiell = xiell[bin_start:]
-std = np.diag(cov)**0.5
+    std = std[bin_start:]
+
+
 print(len(s),len(xiell),len(cov))    
 #d = np.loadtxt(data).transpose()
 xid = xiell#d[2]
@@ -237,7 +240,7 @@ if args.cov_type != 'theory':
 cfac = args.cfac#5/4
 covm *= cfac**2.
 diag = []
-for i in range(bin_start,len(covm)):
+for i in range(0,len(covm)):
     diag.append(np.sqrt(covm[i][i]))
 diag = np.array(diag)
 plt.plot(rl,rl*diag,label='used for fit')
