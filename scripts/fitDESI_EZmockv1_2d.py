@@ -248,8 +248,11 @@ if args.pv == 'ELG':
     if zmin == 1.1:
         zw = 'z_1p1_1p6'
 
-    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian/'+zw+'/npy/'
-
+    if args.recon == 'Pre':
+    	abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/'+args.recon+'/Cristhian/'+zw+'/npy/'
+    else:
+    	abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Post/Cristhian/'+args.recon+'/'+zw+'/npy/'
+    
 if args.pv == 'ELGcubic':
     
     if args.recon == 'Pre':
