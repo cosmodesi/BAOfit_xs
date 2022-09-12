@@ -328,7 +328,7 @@ def doreal(mn):
 
     if args.pv == 'ELGcubic':
 
-       fnm = 'Xi_AbacusSummit_base_c000_'+str(mn).zfill(3)+'.npy'
+       fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
        result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
        rebinned = result[:(result.shape[0]//bs)*bs:bs]
        ells = (0, 2)
