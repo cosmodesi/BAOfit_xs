@@ -240,9 +240,9 @@ if args.tracer == 'LRGcubic':
         abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/LRG/Xi/Pre/jmena/HOD_tests/pycorr_format/'
 if args.pv == 'ELG':
     if zmin == 0.8:
-        zw = '0p8_1p1'
+        zw = 'z_0p8_1p1'
     if zmin == 1.1:
-        zw = '1p1_1p6'
+        zw = 'z_1p1_1p6'
 
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian/'+zw+'/npy/'
 
