@@ -21,6 +21,7 @@ parser.add_argument("--dperp", help="transverse damping; default is about right 
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
 parser.add_argument("--beta", help="f/b assumed for templated generation",default=0.4,type=float)
+parser.add_argument("--recon", help="Pre/Post recon",default='Pre')
 
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
@@ -97,6 +98,9 @@ if args.gencov:
             zbin = '3'
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/ELG/Xi/lhior/npy/'
         fnm = dirm + 'Xi_bin_'+zbin+'_cutsky_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed' 
+    if args.tracer == 'ELGcubic':
+        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/ELG/Xi/lhior/npy/'
+        fnm = dirm +'Xi_CubicBox_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed'
     result = pycorr.TwoPointCorrelationFunction.load(fnm+'1.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
     ells = (0, 2)
@@ -245,6 +249,10 @@ if args.pv == 'ELG':
         zw = 'z_1p1_1p6'
 
     abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Pre/Cristhian/'+zw+'/npy/'
+
+if args.pv == 'ELGcubic':
+    
+    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/ELG/Xi/'+args.recon+'/lhior/'
 
 tw = ''
 if args.HOD != None:
