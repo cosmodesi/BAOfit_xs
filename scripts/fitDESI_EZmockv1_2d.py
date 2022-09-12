@@ -366,7 +366,7 @@ if dofit:
 
 #compile stats
 Nmock = 25
-foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+args.recon'.txt'
+foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+args.recon+'.txt'
 fo = open(foutall,'w')
 fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
 for ii in range(0,Nmock):
