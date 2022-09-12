@@ -95,7 +95,7 @@ if args.gencov:
             zbin = '2'
         if zmin == 1.1:
             zbmin = '3'
-        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/ELG/Xi/lhior/pycorr_format/'
+        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/ELG/Xi/lhior/npy/'
         fnm = dirm + 'Xi_bin_'+zbin+'_cutsky_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed' 
     result = pycorr.TwoPointCorrelationFunction.load(fnm+'1.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
