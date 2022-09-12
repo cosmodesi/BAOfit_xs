@@ -24,7 +24,7 @@ parser.add_argument("--beta", help="f/b assumed for templated generation",defaul
 
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
-parser.add_argument("--HOD", help="whether or not to generate cov matrix",default=None)
+parser.add_argument("--HOD", help="use a particular HOD realization",default=None)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
 parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
@@ -298,6 +298,9 @@ def doreal(mn):
     if args.pv == 'ELG':
        if zmin == 0.8:
            zw = '0p8_1p1'
+       if zmin == 1.1:
+           zw = '1p1_1p6'
+
        fnm = 'z_'+zw+'_cutsky_ELG_ph'+str(mn).zfill(3)+'.npy'
        result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
        rebinned = result[:(result.shape[0]//bs)*bs:bs]
