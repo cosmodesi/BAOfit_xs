@@ -326,10 +326,25 @@ def doreal(mn):
        xid0b = xiell[0][indmin:indmaxb]
        xid2b = xiell[1][indmin:indmaxb]
 
+    if args.pv == 'ELGcubic':
+
+       fnm = 'Xi_AbacusSummit_base_c000_'+str(mn).zfill(3)+'.npy'
+       result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+       rebinned = result[:(result.shape[0]//bs)*bs:bs]
+       ells = (0, 2)
+       s, xiell = rebinned(ells=ells, return_sep=True)
+ 
+       xid0 = xiell[0][indmin:indmax]
+       xid2 = xiell[1][indmin:indmax]
+#       
+       xid0b = xiell[0][indmin:indmaxb]
+       xid2b = xiell[1][indmin:indmaxb]
+
+
 
     xid = np.concatenate((xid0,xid2))
     xidb = np.concatenate((xid0b,xid2b))    
-    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)
+    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)+args.recon
     bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir)
     #bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
     #modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
@@ -351,11 +366,11 @@ if dofit:
 
 #compile stats
 Nmock = 25
-foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+'.txt'
+foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+args.recon'.txt'
 fo = open(foutall,'w')
 fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
 for ii in range(0,Nmock):
-    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)
+    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)+args.recon
     ans = bf.sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
     fo.write(str(ii)+' ')
     for val in ans:
