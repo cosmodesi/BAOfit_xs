@@ -322,7 +322,9 @@ def doreal(mn):
        if args.recon == 'Pre':
            fnm = 'z_'+zw+'_cutsky_ELG_ph'+str(mn).zfill(3)+'.npy'
        else:
-           fnm = 'z_'+zw+'_cutsky_ELG_'+args.recon.lower()+'_ph'+str(mn).zfill(3)+'.npy'
+           if args.recon == 'RecSym':
+               rw = 'recysm'
+           fnm = 'z_'+zw+'_cutsky_ELG_'+rw+'_ph'+str(mn).zfill(3)+'.npy'
        result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
        rebinned = result[:(result.shape[0]//bs)*bs:bs]
        ells = (0, 2)
