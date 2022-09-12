@@ -252,7 +252,7 @@ if args.pv == 'ELG':
 
 if args.pv == 'ELGcubic':
     
-    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/ELG/Xi/'+args.recon+'/lhior/'
+    abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/ELG/Xi/'+args.recon+'/lhior/npy/'
 
 tw = ''
 if args.HOD != None:
