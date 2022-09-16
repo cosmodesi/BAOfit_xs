@@ -157,6 +157,10 @@ def pk3elldfile_dewig(beta=0.4,sigt=3.0,sigr=3.0,sfog=3.5,mun=1.,sigs=15.,sigz=0
     from Cosmo import distance
     mult = 1.
     
+    # from cosmoprimo import Cosmology
+    # cosmo = Cosmology(h=0.6774,omega_cdm=0.1188,omega_b=0.02230,Omega_K=0,
+    #                   A_s=2.142e-9,k_pivot=0.05,n_s=0.9667,omega_ncdm=[0.00064],tau_reio=0.066,engine='camb')
+    
     cosmo = DESI()
     pkz = cosmo.get_fourier().pk_interpolator()
     pk = pkz.to_1d(z=0)
@@ -781,7 +785,7 @@ class baofit3D_ellFull_1cov:
         modl = []
         if wo == 'y':
             fo = open(self.dirout+'ximod'+fw+'.dat','w')
-            fp = open(self.dirout+'xipar'+fw+'dat','w')
+            fp = open(self.dirout+'xipar'+fw+'.dat','w')
         pv = []
         for i in range(0,self.nbin//2):
             pv.append(self.xim[i]-BB*self.xia[i])
