@@ -255,9 +255,9 @@ if args.pv == 'ELG':
         zw = 'z_1p1_1p6'
 
     if args.recon == 'Pre':
-    	abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/'+args.recon+'/Cristhian/'+zw+'/npy/'
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/'+args.recon+'/Cristhian/'+zw+'/npy/'
     else:
-    	abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Post/Cristhian/'+args.recon+'/'+zw+'/npy/'
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/ELG/Xi/Post/Cristhian/'+args.recon+'/'+zw+'/npy/'
     
 if args.pv == 'ELGcubic':
     
@@ -297,19 +297,19 @@ def doreal(mn):
 
             #xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
             #xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
-			
-			fnm = 'Xi_cutsky_LRG_z0.800_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+znm+'.npy'
-		   
-			result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-			rebinned = result[:(result.shape[0]//bs)*bs:bs]
-			ells = (0, 2)
-			s, xiell = rebinned(ells=ells, return_sep=True)
+            
+            fnm = 'Xi_cutsky_LRG_z0.800_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+znm+'.npy'
+           
+            result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            ells = (0, 2)
+            s, xiell = rebinned(ells=ells, return_sep=True)
 
-			xid0 = xiell[0][indmin:indmax]
-			xid2 = xiell[1][indmin:indmax]
-	#       
-			xid0b = xiell[0][indmin:indmaxb]
-			xid2b = xiell[1][indmin:indmaxb]
+            xid0 = xiell[0][indmin:indmax]
+            xid2 = xiell[1][indmin:indmax]
+    #       
+            xid0b = xiell[0][indmin:indmaxb]
+            xid2b = xiell[1][indmin:indmaxb]
 
     
     if args.tracer == 'LRGcubic':
