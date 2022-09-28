@@ -87,7 +87,7 @@ if args.gencov:
         #znm = str(10*zmin)[:1]+str(10*zmax)[:1]
         #dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/csaulder/'
         #fnm = dirm+'EZmock_results_'+znm+'_'
-        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/jmena/pycorr_format/''
+        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/jmena/pycorr_format/'
         fnm = dirm+'Xi_cutsky_LRG_z0.800_EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
         znm = '_zmin'+str(args.zmin)+'_zmax'+str(arg.zmax)
         
