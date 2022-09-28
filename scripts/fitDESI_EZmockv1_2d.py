@@ -156,7 +156,7 @@ if args.gencov:
     xiaveb = xiaveb/float(Ntot)
     for i in range(1,Nmock+1):
         nr = str(i)
-        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+zmn+'.npy')
+        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic0 = rebinned(ells=ells)[0][indmin:indmax]
         xic2 = rebinned(ells=ells)[1][indmin:indmax]
@@ -237,7 +237,8 @@ outdir = os.environ['HOME']+'/DESImockbaofits/'
 
 if args.tracer == 'LRG':
     if args.pv == 'JM':
-        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
+        #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/jmena/pycorr_format/'
     if args.pv == 'CS':
         #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
         abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/csaulder/'
@@ -291,11 +292,24 @@ def doreal(mn):
 
     
         if args.pv == 'JM':
-            xid0 = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
-            xid2 = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
+            #xid0 = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
+            #xid2 = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmax] 
 
-            xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
-            xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
+            #xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
+            #xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
+			
+			fnm = 'Xi_cutsky_LRG_z0.800_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+znm+'.npy'
+		   
+			result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+			rebinned = result[:(result.shape[0]//bs)*bs:bs]
+			ells = (0, 2)
+			s, xiell = rebinned(ells=ells, return_sep=True)
+
+			xid0 = xiell[0][indmin:indmax]
+			xid2 = xiell[1][indmin:indmax]
+	#       
+			xid0b = xiell[0][indmin:indmaxb]
+			xid2b = xiell[1][indmin:indmaxb]
 
     
     if args.tracer == 'LRGcubic':
