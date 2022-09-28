@@ -82,10 +82,15 @@ if args.gentemp:
 if args.gencov:
     
     #dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/EZmocks/'
+    znm = ''
     if args.tracer == 'LRG':
-        znm = str(10*zmin)[:1]+str(10*zmax)[:1]
-        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/csaulder/'
-        fnm = dirm+'EZmock_results_'+znm+'_'
+        #znm = str(10*zmin)[:1]+str(10*zmax)[:1]
+        #dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/csaulder/'
+        #fnm = dirm+'EZmock_results_'+znm+'_'
+        dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CutSky/LRG/Xi/jmena/pycorr_format/
+        fnm = dirm+'Xi_cutsky_LRG_z0.800_EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
+        znm = '_zmin'+str(args.zmin)+'_zmax'+str(arg.zmax)
+        
     if args.tracer == 'LRGcubic':
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/LRG/Xi/jmena/pycorr_format/'
         fnm = dirm+'Xi_EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
@@ -101,7 +106,7 @@ if args.gencov:
     if args.tracer == 'ELGcubic':
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/ELG/Xi/lhior/npy/'
         fnm = dirm +'Xi_CubicBox_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed'
-    result = pycorr.TwoPointCorrelationFunction.load(fnm+'1.npy')
+    result = pycorr.TwoPointCorrelationFunction.load(fnm+'1'+znm+'.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
     ells = (0, 2)
     s, xiell = rebinned(ells=ells, return_sep=True)
@@ -135,7 +140,7 @@ if args.gencov:
     fac = 1.
     for i in range(1,Nmock+1):
         nr = str(i)
-        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+'.npy')
+        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic0 = rebinned(ells=ells)[0][indmin:indmax]
         xic2 = rebinned(ells=ells)[1][indmin:indmax]
@@ -151,7 +156,7 @@ if args.gencov:
     xiaveb = xiaveb/float(Ntot)
     for i in range(1,Nmock+1):
         nr = str(i)
-        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+'.npy')
+        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+zmn+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic0 = rebinned(ells=ells)[0][indmin:indmax]
         xic2 = rebinned(ells=ells)[1][indmin:indmax]
