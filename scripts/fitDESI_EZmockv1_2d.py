@@ -245,7 +245,7 @@ if args.tracer == 'LRG':
 
 if args.tracer == 'LRGcubic':
     if args.HOD == None:
-        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/LRG/Xi/Pre/jmena/pycorr_format/'
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/LRG/Xi/'+args.recon+'/jmena/pycorr_format/'
     else:
         abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CubicBox/LRG/Xi/Pre/jmena/HOD_tests/pycorr_format/'
 if args.pv == 'ELG':
@@ -315,7 +315,11 @@ def doreal(mn):
     if args.tracer == 'LRGcubic':
 
         if args.HOD == None:
-           fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
+            if args.recon == 'Pre':
+                fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
+            else:
+                fnm = 'Xi_LRG_snap20_ph'+str(mn).zfill(3)+'.gcat_shift_MultiGrid_mesh512_smooth10_recsym_f0.838_b1.99.npy'
+            
            
         else:
            #tw = HOD+str(args.HOD)
