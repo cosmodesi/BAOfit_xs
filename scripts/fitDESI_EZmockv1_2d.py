@@ -301,8 +301,13 @@ def doreal(mn):
             if args.recon == 'Pre':
                 fnm = 'Xi_cutsky_LRG_z0.800_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+znm+'.npy'
             else:
-                fnm = 'Xi_cutsky_LRG_z0.8-Abacus-base-c000_ph'+str(mn).zfill(3)+'_'+str(args.zmin)+'z'+str(args.zmax)+'_shift_MultiGrid_randoms20X_reso7.8_smooth10_pad1.5_recsym_f0.830_b2.00.npy'
-           
+                if str(args.zmin) == '0.8':
+                    fnm = 'Xi_cutsky_LRG_z0.8-Abacus-base-c000_ph'+str(mn).zfill(3)+'_'+str(args.zmin)+'z'+str(args.zmax)+'_shift_MultiGrid_randoms20X_reso7.8_smooth10_pad1.5_recsym_f0.830_b2.00.npy'
+                if str(args.zmin) == '0.6':
+                   fnm =  'Xi_cutsky_LRG_z0.8-Abacus-base-c000_ph'+str(mn).zfill(3)+'_0.6z0.8_shift_MultiGrid_randoms20X_reso7.8_smooth10_pad1.5_recsym_f0.841_b2.00.npy'
+                if str(args.zmin) == '0.4':
+                   fnm =  'Xi_cutsky_LRG_z0.8-Abacus-base-c000_ph'+str(mn).zfill(3)+'_0.4z0.6_shift_MultiGrid_randoms20X_reso7.8_smooth10_pad1.5_recsym_f0.839_b2.00.npy'
+                
             result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
             rebinned = result[:(result.shape[0]//bs)*bs:bs]
             ells = (0, 2)
