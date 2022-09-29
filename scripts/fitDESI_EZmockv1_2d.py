@@ -238,7 +238,7 @@ outdir = os.environ['HOME']+'/DESImockbaofits/'
 if args.tracer == 'LRG':
     if args.pv == 'JM':
         #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/jmena/'
-        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/jmena/pycorr_format/'
+        abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/'+args.recon+'/jmena/pycorr_format/'
     if args.pv == 'CS':
         #abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/csaulder/CF_multipoles/'
         abdir = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/AbacusSummit/CutSky/LRG/Xi/Pre/csaulder/'
@@ -298,7 +298,10 @@ def doreal(mn):
             #xid0b = np.loadtxt(abdir+'Xi_0_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
             #xid2b = np.loadtxt(abdir+'Xi_2_zmin'+str(zmin)+'_zmax'+str(zmax)+'.txt').transpose()[mn][indmin:indmaxb] 
             
-            fnm = 'Xi_cutsky_LRG_z0.800_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+znm+'.npy'
+            if args.recon == 'Pre':
+                fnm = 'Xi_cutsky_LRG_z0.800_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+znm+'.npy'
+            else:
+                fnm = 'Xi_cutsky_LRG_z0.8-Abacus-base-c000_ph'+str(mn).zfill(3)+'_'+str(args.zmin)+'z'+str(args.zmax)+'_shift_MultiGrid_randoms20X_reso7.8_smooth10_pad1.5_recsym_f0.830_b2.00.npy'
            
             result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
             rebinned = result[:(result.shape[0]//bs)*bs:bs]
