@@ -126,7 +126,7 @@ if args.gencov:
         if s[i] > rmaxb and sxb == 0:
             indmaxb = i
             sxb = 1
-    print(indmin,indmax)        
+    print(indmin,s[indmin],indmax,s[indmax])        
     nbin = 2*(indmax-indmin)
     print(nbin)
     xiave = np.zeros((nbin))
