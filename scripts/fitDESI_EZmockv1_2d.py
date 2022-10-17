@@ -345,12 +345,12 @@ def doreal(mn=0,mean=False):
             ells = (0, 2)
             s, xiell = rebinned(ells=ells, return_sep=True)
 
-            xid0 = xiell[0][indmin:indmax]
-            xid2 = xiell[1][indmin:indmax]
+            xid0 = xiell[0]#[indmin:indmax]
+            xid2 = xiell[1]#[indmin:indmax]
             print(xid0,xid2)
     #       
-            xid0b = xiell[0][indmin:indmaxb]
-            xid2b = xiell[1][indmin:indmaxb]
+            #xid0b = xiell[0][indmin:indmaxb]
+            #xid2b = xiell[1][indmin:indmaxb]
             for mn in range(1,25):
                 if args.HOD == None:
                     if args.recon == 'Pre':
@@ -368,16 +368,20 @@ def doreal(mn=0,mean=False):
                 ells = (0, 2)
                 s, xiell = rebinned(ells=ells, return_sep=True)
 
-                xid0 += xiell[0][indmin:indmax]
-                xid2 += xiell[1][indmin:indmax]
+                xid0 += xiell[0]#[indmin:indmax]
+                xid2 += xiell[1]#[indmin:indmax]
         #       
-                xid0b += xiell[0][indmin:indmaxb]
-                xid2b += xiell[1][indmin:indmaxb]
-            xid0 /= 25.
-            xid2 /= 25.
+                #xid0b += xiell[0][indmin:indmaxb]
+                #xid2b += xiell[1][indmin:indmaxb]
             print(xid0,xid2)
-            xid0b /= 25.
-            xid2b /= 25.
+            xid0 = xid0/25.
+            xid2 = xid2/25.
+            print(xid0,xid2)
+            xid0 = xid0[indmin:indmax]
+            xid2 = xid2[indmin:indmax]
+            print(xid0,xid2)
+            xid0b = xid0[indmin:indmaxb]#/= 25.
+            xid2b = xid2[indmin:indmax]#/= 25.
             
         else:
             result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
