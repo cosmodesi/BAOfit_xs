@@ -346,8 +346,8 @@ def doreal(mn=0,mean=False):
             s, xiell = rebinned(ells=ells, return_sep=True)
 
             xid0 = xiell[0][indmin:indmax]
-            print(xid0)
             xid2 = xiell[1][indmin:indmax]
+            print(xid0,xid2)
     #       
             xid0b = xiell[0][indmin:indmaxb]
             xid2b = xiell[1][indmin:indmaxb]
@@ -374,8 +374,8 @@ def doreal(mn=0,mean=False):
                 xid0b += xiell[0][indmin:indmaxb]
                 xid2b += xiell[1][indmin:indmaxb]
             xid0 /= 25.
-            print(xid0)
             xid2 /= 25.
+            print(xid0,xid2)
             xid0b /= 25.
             xid2b /= 25.
             
@@ -432,6 +432,7 @@ def doreal(mn=0,mean=False):
 
 
     xid = np.concatenate((xid0,xid2))
+    print(xid)
     xidb = np.concatenate((xid0b,xid2b))  
     if mean:
         mn == 'mean'  
