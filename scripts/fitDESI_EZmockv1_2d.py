@@ -23,12 +23,19 @@ parser.add_argument("--sfog", help="streaming velocity term; default standardish
 parser.add_argument("--beta", help="f/b assumed for templated generation",default=0.4,type=float)
 parser.add_argument("--recon", help="Pre/Post recon",default='Pre')
 
+parser.add_argument("--spat",help='grid size for alpha_perp',default=0.001)
+parser.add_argument("--spar",help='grid size for alpha_||',default=0.002)
+parser.add_argument("--mina",help='minimum alpha for grid',default=0.9)
+parser.add_argument("--maxa",help='maximum alpha for grid',default=1.1)
+
+
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
 parser.add_argument("--HOD", help="use a particular HOD realization",default=None)
 parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
 parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
+parser.add_argument("--domean", help="if 'y', only fit to mean",default='n')
 args = parser.parse_args()
 
 dofit = True
@@ -269,7 +276,7 @@ tw = ''
 if args.HOD != None:
     tw = 'HOD'+str(args.HOD)
 
-def doreal(mn):
+def doreal(mn=0,mean=False):
     if args.tracer == 'LRG':
         if args.pv == 'CS':
             #fnm = abdir+'results_realization'+str(mn).zfill(3)+'_rand20_'+znm+'.dat'
@@ -321,27 +328,55 @@ def doreal(mn):
 
     
     if args.tracer == 'LRGcubic':
+		if args.HOD == None:
+			if args.recon == 'Pre':
+				fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
+			else:
+				fnm = 'Xi_LRG_snap20_ph'+str(mn).zfill(3)+'.gcat_shift_MultiGrid_mesh512_smooth10_recsym_f0.838_b1.99.npy'
+		
+	   
+		else:
+		   #tw = HOD+str(args.HOD)
+		   fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
 
-        if args.HOD == None:
-            if args.recon == 'Pre':
-                fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
-            else:
-                fnm = 'Xi_LRG_snap20_ph'+str(mn).zfill(3)+'.gcat_shift_MultiGrid_mesh512_smooth10_recsym_f0.838_b1.99.npy'
+        if mean == True:
+			result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+			rebinned = result[:(result.shape[0]//bs)*bs:bs]
+			ells = (0, 2)
+			s, xiell = rebinned(ells=ells, return_sep=True)
+
+			xid0 = xiell[0][indmin:indmax]
+			xid2 = xiell[1][indmin:indmax]
+	#       
+			xid0b = xiell[0][indmin:indmaxb]
+			xid2b = xiell[1][indmin:indmaxb]
+			for mn in range(1,25):
+				result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+				rebinned = result[:(result.shape[0]//bs)*bs:bs]
+				ells = (0, 2)
+				s, xiell = rebinned(ells=ells, return_sep=True)
+
+				xid0 += xiell[0][indmin:indmax]
+				xid2 += xiell[1][indmin:indmax]
+		#       
+				xid0b += xiell[0][indmin:indmaxb]
+				xid2b += xiell[1][indmin:indmaxb]
+            xid0 /= 25.
+            xid2 /= 25.
+            xid0b /= 25.
+            xid2b /= 25.
             
-           
         else:
-           #tw = HOD+str(args.HOD)
-           fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
-        result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-        rebinned = result[:(result.shape[0]//bs)*bs:bs]
-        ells = (0, 2)
-        s, xiell = rebinned(ells=ells, return_sep=True)
+			result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+			rebinned = result[:(result.shape[0]//bs)*bs:bs]
+			ells = (0, 2)
+			s, xiell = rebinned(ells=ells, return_sep=True)
 
-        xid0 = xiell[0][indmin:indmax]
-        xid2 = xiell[1][indmin:indmax]
-#       
-        xid0b = xiell[0][indmin:indmaxb]
-        xid2b = xiell[1][indmin:indmaxb]
+			xid0 = xiell[0][indmin:indmax]
+			xid2 = xiell[1][indmin:indmax]
+	#       
+			xid0b = xiell[0][indmin:indmaxb]
+			xid2b = xiell[1][indmin:indmaxb]
 
     
     if args.pv == 'ELG':
@@ -384,9 +419,11 @@ def doreal(mn):
 
 
     xid = np.concatenate((xid0,xid2))
-    xidb = np.concatenate((xid0b,xid2b))    
+    xidb = np.concatenate((xid0b,xid2b))  
+    if mean:
+        mn == 'mean'  
     fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)+args.recon
-    bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir)
+    bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir,spat=args.spat,spar=args.spat,mina=args.mina,maxa=args.maxa)
     #bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
     #modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
     #plt.errorbar(sc,sc**2.*xid,sc**2.*xistd,fmt='ro')
@@ -395,6 +432,8 @@ def doreal(mn):
 
 if dofit:
     print(args.par)
+    if args.domean == 'y':
+        doreal(mean=True)
     if args.par == 'y':
         from multiprocessing import Pool
         N = 25
