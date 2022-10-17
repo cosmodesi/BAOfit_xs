@@ -351,6 +351,17 @@ def doreal(mn=0,mean=False):
             xid0b = xiell[0][indmin:indmaxb]
             xid2b = xiell[1][indmin:indmaxb]
             for mn in range(1,25):
+                if args.HOD == None:
+                    if args.recon == 'Pre':
+                        fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
+                    else:
+                        fnm = 'Xi_LRG_snap20_ph'+str(mn).zfill(3)+'.gcat_shift_MultiGrid_mesh512_smooth10_recsym_f0.838_b1.99.npy'
+        
+       
+                else:
+                   #tw = HOD+str(args.HOD)
+                   fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
+
                 result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
                 rebinned = result[:(result.shape[0]//bs)*bs:bs]
                 ells = (0, 2)
