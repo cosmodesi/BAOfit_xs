@@ -346,6 +346,7 @@ def doreal(mn=0,mean=False):
             s, xiell = rebinned(ells=ells, return_sep=True)
 
             xid0 = xiell[0][indmin:indmax]
+            print(xid0)
             xid2 = xiell[1][indmin:indmax]
     #       
             xid0b = xiell[0][indmin:indmaxb]
