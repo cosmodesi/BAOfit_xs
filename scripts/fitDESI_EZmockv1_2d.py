@@ -328,55 +328,55 @@ def doreal(mn=0,mean=False):
 
     
     if args.tracer == 'LRGcubic':
-		if args.HOD == None:
-			if args.recon == 'Pre':
-				fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
-			else:
-				fnm = 'Xi_LRG_snap20_ph'+str(mn).zfill(3)+'.gcat_shift_MultiGrid_mesh512_smooth10_recsym_f0.838_b1.99.npy'
-		
-	   
-		else:
-		   #tw = HOD+str(args.HOD)
-		   fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
+        if args.HOD == None:
+            if args.recon == 'Pre':
+                fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'.npy'
+            else:
+                fnm = 'Xi_LRG_snap20_ph'+str(mn).zfill(3)+'.gcat_shift_MultiGrid_mesh512_smooth10_recsym_f0.838_b1.99.npy'
+        
+       
+        else:
+           #tw = HOD+str(args.HOD)
+           fnm = 'Xi_AbacusSummit_base_c000_ph'+str(mn).zfill(3)+'_HOD'+str(args.HOD)+'.npy'
 
         if mean == True:
-			result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-			rebinned = result[:(result.shape[0]//bs)*bs:bs]
-			ells = (0, 2)
-			s, xiell = rebinned(ells=ells, return_sep=True)
+            result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            ells = (0, 2)
+            s, xiell = rebinned(ells=ells, return_sep=True)
 
-			xid0 = xiell[0][indmin:indmax]
-			xid2 = xiell[1][indmin:indmax]
-	#       
-			xid0b = xiell[0][indmin:indmaxb]
-			xid2b = xiell[1][indmin:indmaxb]
-			for mn in range(1,25):
-				result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-				rebinned = result[:(result.shape[0]//bs)*bs:bs]
-				ells = (0, 2)
-				s, xiell = rebinned(ells=ells, return_sep=True)
+            xid0 = xiell[0][indmin:indmax]
+            xid2 = xiell[1][indmin:indmax]
+    #       
+            xid0b = xiell[0][indmin:indmaxb]
+            xid2b = xiell[1][indmin:indmaxb]
+            for mn in range(1,25):
+                result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+                rebinned = result[:(result.shape[0]//bs)*bs:bs]
+                ells = (0, 2)
+                s, xiell = rebinned(ells=ells, return_sep=True)
 
-				xid0 += xiell[0][indmin:indmax]
-				xid2 += xiell[1][indmin:indmax]
-		#       
-				xid0b += xiell[0][indmin:indmaxb]
-				xid2b += xiell[1][indmin:indmaxb]
+                xid0 += xiell[0][indmin:indmax]
+                xid2 += xiell[1][indmin:indmax]
+        #       
+                xid0b += xiell[0][indmin:indmaxb]
+                xid2b += xiell[1][indmin:indmaxb]
             xid0 /= 25.
             xid2 /= 25.
             xid0b /= 25.
             xid2b /= 25.
             
         else:
-			result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
-			rebinned = result[:(result.shape[0]//bs)*bs:bs]
-			ells = (0, 2)
-			s, xiell = rebinned(ells=ells, return_sep=True)
+            result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            ells = (0, 2)
+            s, xiell = rebinned(ells=ells, return_sep=True)
 
-			xid0 = xiell[0][indmin:indmax]
-			xid2 = xiell[1][indmin:indmax]
-	#       
-			xid0b = xiell[0][indmin:indmaxb]
-			xid2b = xiell[1][indmin:indmaxb]
+            xid0 = xiell[0][indmin:indmax]
+            xid2 = xiell[1][indmin:indmax]
+    #       
+            xid0b = xiell[0][indmin:indmaxb]
+            xid2b = xiell[1][indmin:indmaxb]
 
     
     if args.pv == 'ELG':
