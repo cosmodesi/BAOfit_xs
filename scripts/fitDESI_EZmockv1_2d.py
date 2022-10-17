@@ -423,7 +423,7 @@ def doreal(mn=0,mean=False):
     if mean:
         mn == 'mean'  
     fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)+args.recon
-    bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir,spat=args.spat,spar=args.spat,mina=args.mina,maxa=args.maxa)
+    bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir,spat=args.spat,spar=args.spar,mina=args.mina,maxa=args.maxa)
     #bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
     #modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
     #plt.errorbar(sc,sc**2.*xid,sc**2.*xistd,fmt='ro')
