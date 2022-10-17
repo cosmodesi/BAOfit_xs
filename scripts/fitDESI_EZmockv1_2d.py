@@ -373,6 +373,7 @@ def doreal(mn=0,mean=False):
                 xid0b += xiell[0][indmin:indmaxb]
                 xid2b += xiell[1][indmin:indmaxb]
             xid0 /= 25.
+            print(xid0)
             xid2 /= 25.
             xid0b /= 25.
             xid2b /= 25.
