@@ -347,7 +347,7 @@ def doreal(mn=0,mean=False):
 
             xid0 = xiell[0]#[indmin:indmax]
             xid2 = xiell[1]#[indmin:indmax]
-            print(xid0,xid2)
+            print(xid0[indmin:indmax],xid2[indmin:indmax])
     #       
             #xid0b = xiell[0][indmin:indmaxb]
             #xid2b = xiell[1][indmin:indmaxb]
@@ -373,10 +373,10 @@ def doreal(mn=0,mean=False):
         #       
                 #xid0b += xiell[0][indmin:indmaxb]
                 #xid2b += xiell[1][indmin:indmaxb]
-            print(xid0,xid2)
+            #print(xid0,xid2)
             xid0 = xid0/25.
             xid2 = xid2/25.
-            print(xid0,xid2)
+            print(xid0[indmin:indmax],xid2[indmin:indmax])
             xid0 = xid0[indmin:indmax]
             xid2 = xid2[indmin:indmax]
             print(xid0,xid2)
@@ -452,49 +452,51 @@ if dofit:
     print(args.par)
     if args.domean == 'y':
         doreal(mean=True)
-    if args.par == 'y':
-        from multiprocessing import Pool
-        N = 25
-        p = Pool(N)
-        inds = np.arange(N)
-        p.map(doreal,inds)
-
     else:
-        doreal(0)
+        if args.par == 'y':
+            from multiprocessing import Pool
+            N = 25
+            p = Pool(N)
+            inds = np.arange(N)
+            p.map(doreal,inds)
 
-#compile stats
-Nmock = 25
-foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+args.recon+'.txt'
-fo = open(foutall,'w')
-fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
-for ii in range(0,Nmock):
-    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)+args.recon
-    ans = bf.sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
-    fo.write(str(ii)+' ')
-    for val in ans:
-        fo.write(str(val)+' ')
-    fo.write('\n')
-fo.close()
+        else:
+            doreal(0)
 
-all = np.loadtxt(foutall).transpose()
+if args.domean != 'y':
+    #compile stats
+    Nmock = 25
+    foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+args.recon+'.txt'
+    fo = open(foutall,'w')
+    fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
+    for ii in range(0,Nmock):
+        fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)+args.recon
+        ans = bf.sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
+        fo.write(str(ii)+' ')
+        for val in ans:
+            fo.write(str(val)+' ')
+        fo.write('\n')
+    fo.close()
 
-meanchi2 = np.mean(all[-3])
-print('<chi2>/dof is '+str(round(meanchi2,3))+'/'+str(nbt-10))
+    all = np.loadtxt(foutall).transpose()
 
-meanapar = np.mean(all[1])
-stdapar = np.std(all[1])
-meanspar = np.mean(all[2])
-print('<alpha_||>,std(alpha_||),<sigma_||>')
-print(meanapar,stdapar,meanspar)
-meanaperp = np.mean(all[3])
-stdaperp = np.std(all[3])
-meansperp = np.mean(all[4])
-print('<alpha_perp>,std(alpha_perp),<sigma_perp>')
-print(meanaperp,stdaperp,meansperp)
-corrparperp = (np.sum(all[1]*all[3])/Nmock-meanaperp*meanapar)/(stdaperp*stdapar)
-meancorr = np.mean(all[-1])
-print('corr_par,perp,<corr_par,perp>')
-print(corrparperp,meancorr)
+    meanchi2 = np.mean(all[-3])
+    print('<chi2>/dof is '+str(round(meanchi2,3))+'/'+str(nbt-10))
+
+    meanapar = np.mean(all[1])
+    stdapar = np.std(all[1])
+    meanspar = np.mean(all[2])
+    print('<alpha_||>,std(alpha_||),<sigma_||>')
+    print(meanapar,stdapar,meanspar)
+    meanaperp = np.mean(all[3])
+    stdaperp = np.std(all[3])
+    meansperp = np.mean(all[4])
+    print('<alpha_perp>,std(alpha_perp),<sigma_perp>')
+    print(meanaperp,stdaperp,meansperp)
+    corrparperp = (np.sum(all[1]*all[3])/Nmock-meanaperp*meanapar)/(stdaperp*stdapar)
+    meancorr = np.mean(all[-1])
+    print('corr_par,perp,<corr_par,perp>')
+    print(corrparperp,meancorr)
 
     
 
