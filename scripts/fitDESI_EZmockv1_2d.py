@@ -238,6 +238,7 @@ Bt = 100#0.4
 spa = .001
 mina = .8
 maxa = 1.2
+
 if args.outdir == None:
     outdir = os.environ['HOME']+'/DESImockbaofits/'
 else:
