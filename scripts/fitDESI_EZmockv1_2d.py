@@ -14,28 +14,31 @@ import argparse
 import pycorr
 
 parser = argparse.ArgumentParser()
+#for getting the correct data
 parser.add_argument("--tracer",help="the tracer type",default='LRG')
 parser.add_argument("--zmin", help="minimum redshift",default=0.8,type=float)
 parser.add_argument("--zmax", help="maximum redshift",default=1.1,type=float)
+parser.add_argument("--recon", help="Pre/Post recon",default='Pre')
+parser.add_argument("--HOD", help="use a particular HOD realization",default=None)
+parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
+
+#for the BAO template
 parser.add_argument("--dperp", help="transverse damping; default is about right for z~1",default=4.0,type=float)
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
 parser.add_argument("--beta", help="f/b assumed for templated generation",default=0.4,type=float)
-parser.add_argument("--recon", help="Pre/Post recon",default='Pre')
-
+#parameters for chi2 grid
 parser.add_argument("--spat",help='grid size for alpha_perp',default=0.001)
 parser.add_argument("--spar",help='grid size for alpha_||',default=0.002)
 parser.add_argument("--mina",help='minimum alpha for grid',default=0.9)
 parser.add_argument("--maxa",help='maximum alpha for grid',default=1.1)
 
-
 parser.add_argument("--outdir", help="root directory for output",default=None)
 
-
+#these should always be true at this point
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
-parser.add_argument("--HOD", help="use a particular HOD realization",default=None)
-parser.add_argument("--pv", help="whose abacus paircounts; options are CS or JM",default='CS')
+
 parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
 parser.add_argument("--domean", help="if 'y', only fit to mean",default='n')
