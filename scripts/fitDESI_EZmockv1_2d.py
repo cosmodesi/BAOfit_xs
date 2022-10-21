@@ -29,6 +29,9 @@ parser.add_argument("--mina",help='minimum alpha for grid',default=0.9)
 parser.add_argument("--maxa",help='maximum alpha for grid',default=1.1)
 
 
+parser.add_argument("--outdir", help="root directory for output",default=None)
+
+
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
 parser.add_argument("--HOD", help="use a particular HOD realization",default=None)
