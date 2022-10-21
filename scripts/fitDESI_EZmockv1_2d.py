@@ -28,8 +28,8 @@ parser.add_argument("--drad", help="radial damping; default is about right for z
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
 parser.add_argument("--beta", help="f/b assumed for templated generation",default=0.4,type=float)
 #parameters for chi2 grid
-parser.add_argument("--spat",help='grid size for alpha_perp',default=0.001)
-parser.add_argument("--spar",help='grid size for alpha_||',default=0.002)
+parser.add_argument("--spat",help='grid size for alpha_perp',default=0.003)
+parser.add_argument("--spar",help='grid size for alpha_||',default=0.006)
 parser.add_argument("--mina",help='minimum alpha for grid',default=0.9)
 parser.add_argument("--maxa",help='maximum alpha for grid',default=1.1)
 
@@ -240,10 +240,6 @@ mod = 'DESI'+wm+'15.00.dat'
 #bias priors, log around best fit up to rmaxb
 Bp = 100#0.4
 Bt = 100#0.4
-
-spa = .001
-mina = .8
-maxa = 1.2
 
 if args.outdir == None:
     outdir = os.environ['HOME']+'/DESImockbaofits/'
