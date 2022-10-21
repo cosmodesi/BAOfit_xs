@@ -238,7 +238,20 @@ Bt = 100#0.4
 spa = .001
 mina = .8
 maxa = 1.2
-outdir = os.environ['HOME']+'/DESImockbaofits/'
+if args.outdir == None:
+    outdir = os.environ['HOME']+'/DESImockbaofits/'
+else:
+    outdir = args.outdir
+
+if not os.path.exists(outdir):
+	os.mkdir(outdir)
+	print('made '+outdir)
+
+
+if not os.path.exists(outdir+'/2Dbaofits'):
+	os.mkdir(outdir+'/2Dbaofits')
+	print('made '+outdir+'/2Dbaofits')
+
 
 
 
