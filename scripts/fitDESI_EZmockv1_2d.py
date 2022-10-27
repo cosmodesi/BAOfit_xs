@@ -234,7 +234,7 @@ if args.gencov:
         rlb.append(rbc) 
 
 
-wm = str(beta)+str(sfog)+str(dperp)+str(drad)+args.betamd
+wm = str(beta)+str(sfog)+str(dperp)+str(drad)
 mod = 'DESI'+wm+'15.00.dat'
 
 
@@ -457,7 +457,7 @@ def doreal(mn=0,mean=False):
     xidb = np.concatenate((xid0b,xid2b))  
     if mean:
         mn == 'mean'  
-    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)+args.recon
+    fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)+args.recon+args.betamd
     bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir,spat=args.spat,spar=args.spar,mina=args.mina,maxa=args.maxa,betamd=args.betamd)
     #bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
     #modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
