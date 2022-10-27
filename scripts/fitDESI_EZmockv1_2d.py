@@ -27,6 +27,7 @@ parser.add_argument("--dperp", help="transverse damping; default is about right 
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
 parser.add_argument("--beta", help="f/b assumed for templated generation",default=0.4,type=float)
+parser.add_argument("--betamd", help="iso or sym for b2 applied to xi2 or ximu2",default='iso')
 #parameters for chi2 grid
 parser.add_argument("--spat",help='grid size for alpha_perp',default=0.003)
 parser.add_argument("--spar",help='grid size for alpha_||',default=0.006)
@@ -233,7 +234,7 @@ if args.gencov:
         rlb.append(rbc) 
 
 
-wm = str(beta)+str(sfog)+str(dperp)+str(drad)
+wm = str(beta)+str(sfog)+str(dperp)+str(drad)+args.betamd
 mod = 'DESI'+wm+'15.00.dat'
 
 
@@ -457,7 +458,7 @@ def doreal(mn=0,mean=False):
     if mean:
         mn == 'mean'  
     fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)+args.recon
-    bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir,spat=args.spat,spar=args.spar,mina=args.mina,maxa=args.maxa)
+    bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir,spat=args.spat,spar=args.spar,mina=args.mina,maxa=args.maxa,betamd=args.betamd)
     #bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
     #modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
     #plt.errorbar(sc,sc**2.*xid,sc**2.*xistd,fmt='ro')

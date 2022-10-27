@@ -763,7 +763,7 @@ class baofit3D_ellFull_1cov:
         Btfac = (log(Beta/self.B0)/self.Bt)**2.
         return chit+BBfac+Btfac
 
-    def chi_templ_alphfXX_an(self,list,wo='n',fw='',v='n'):
+    def chi_templ_alphfXX_an(self,list,wo='n',fw='',v='n',md='iso'):
         from time import time
         t = time()
         BB = list[0]
@@ -790,8 +790,10 @@ class baofit3D_ellFull_1cov:
         for i in range(0,self.nbin//2):
             pv.append(self.xim[i]-BB*self.xia[i])
         for i in range(self.nbin//2,self.nbin):
-            pv.append(self.xim[i]-(5.*(Beta*self.xia[i]-BB*0.5*self.xia[i-self.nbin//2])))
-         
+            if md == 'iso':
+                pv.append(self.xim[i]-(5.*(Beta*self.xia[i]-BB*0.5*self.xia[i-self.nbin//2])))
+            if md == 'sym':
+                pv.append(self.xim[i]-Beta*(5.*(self.xia[i]-0.5*self.xia[i-self.nbin//2]))) 
         Al = findPolya(self.H,self.invt,pv)
         A0,A1,A2,A02,A12,A22 = Al[0],Al[1],Al[2],Al[3],Al[4],Al[5]
         if wo == 'y':
@@ -931,7 +933,7 @@ def sigreg_2dEZ(file):
     return mar,sigr,map,sigp,np.min(chi2),crp,crp/(sigr*sigp)
     
 
-def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=.8,maxa=1.2,nobao='n',Bp=.4,Bt=.4,meth='Powell',fout='',dirout='',Nmock=1000,verbose=False):
+def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=.8,maxa=1.2,nobao='n',Bp=.4,Bt=.4,meth='Powell',fout='',dirout='',Nmock=1000,verbose=False,betamd='iso'):
     from time import time
     import numpy    
     #from optimize import fmin
@@ -994,7 +996,7 @@ def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=
             b.mkxi()
             inl = (b.B0,b.B0)
             (B,B0) = minimize(b.chi_templ_alphfXX_an,inl,method=meth,options={'disp': False}).x
-            chi = b.chi_templ_alphfXX_an((B,B0))*fac
+            chi = b.chi_templ_alphfXX_an((B,B0),md=betamd)*fac
             grid[i][j] = chi
             fo.write(str(b.ar)+' '+str(b.at)+' '+str(chi)+'\n')
             fg.write(str(chi)+' ')
@@ -1011,14 +1013,14 @@ def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=
     b.at = altm 
     b.mkxi()
     b.mkxism()
-    chi = b.chi_templ_alphfXX_an((Bm,Betam),wo='y',fw=fout) #writes out best-fit model
+    chi = b.chi_templ_alphfXX_an((Bm,Betam),wo='y',fw=fout,md=betamd) #writes out best-fit model
     print(alrm,altm,chim)#,alphlk,likm
     alph = (alrm*altm**2.)**(1/3.)
     b.ar = alph
     b.at = alph 
     b.mkxi()
     b.mkxism()
-    chi = b.chi_templ_alphfXX_an((Bm,Betam),wo='y',fw=fout+'ep0')
+    chi = b.chi_templ_alphfXX_an((Bm,Betam),wo='y',fw=fout+'ep0',md=betamd)
     #print chi
     fo.close()
     fg.close()
