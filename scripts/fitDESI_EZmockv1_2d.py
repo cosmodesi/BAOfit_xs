@@ -29,10 +29,10 @@ parser.add_argument("--sfog", help="streaming velocity term; default standardish
 parser.add_argument("--beta", help="f/b assumed for templated generation",default=0.4,type=float)
 parser.add_argument("--betamd", help="iso or sym for b2 applied to xi2 or ximu2",default='iso')
 #parameters for chi2 grid
-parser.add_argument("--spat",help='grid size for alpha_perp',default=0.003)
-parser.add_argument("--spar",help='grid size for alpha_||',default=0.006)
-parser.add_argument("--mina",help='minimum alpha for grid',default=0.9)
-parser.add_argument("--maxa",help='maximum alpha for grid',default=1.1)
+parser.add_argument("--spat",help='grid size for alpha_perp',default=0.003,type=float)
+parser.add_argument("--spar",help='grid size for alpha_||',default=0.006,type=float)
+parser.add_argument("--mina",help='minimum alpha for grid',default=0.9,type=float)
+parser.add_argument("--maxa",help='maximum alpha for grid',default=1.1,type=float)
 
 parser.add_argument("--outdir", help="root directory for output",default=None)
 
