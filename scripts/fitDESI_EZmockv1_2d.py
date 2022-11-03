@@ -129,7 +129,7 @@ if args.gencov:
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/ELG/Xi/lhior/npy/'
         fnm = dirm +'Xi_CubicBox_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed'
     if args.covmd == 'rec':
-        result = pypower.CatalogFFTCorr.load(dirm+'1/'+fnm)
+        result = pypower.CatalogFFTCorr.load(dirm+'1/'+fnm).poles
     else:    
         result = pycorr.TwoPointCorrelationFunction.load(fnm+'1'+znm+'.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
@@ -166,7 +166,7 @@ if args.gencov:
     for i in range(1,Nmock+1):
         nr = str(i)
         if args.covmd == 'rec':
-            result = pypower.CatalogFFTCorr.load(dirm+nr+'/'+fnm)
+            result = pypower.CatalogFFTCorr.load(dirm+nr+'/'+fnm).poles
         else:    
             result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
@@ -184,7 +184,12 @@ if args.gencov:
     xiaveb = xiaveb/float(Ntot)
     for i in range(1,Nmock+1):
         nr = str(i)
-        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
+        if args.covmd == 'rec':
+            result = pypower.CatalogFFTCorr.load(dirm+nr+'/'+fnm).poles
+        else:    
+            result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
+
+        #result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic0 = rebinned(ells=ells)[0][indmin:indmax]
         xic2 = rebinned(ells=ells)[1][indmin:indmax]
