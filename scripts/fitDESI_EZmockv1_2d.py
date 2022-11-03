@@ -162,7 +162,7 @@ if args.gencov:
     for i in range(1,Nmock+1):
         nr = str(i)
         if args.covmd == 'rec':
-            result = pycorr.TwoPointCorrelationFunction.load(dirm+nr'/'+fnm)
+            result = pycorr.TwoPointCorrelationFunction.load(dirm+nr+'/'+fnm)
         else:    
             result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
