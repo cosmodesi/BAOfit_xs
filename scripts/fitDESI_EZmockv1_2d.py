@@ -208,6 +208,8 @@ if args.gencov:
             xic2 = rebinned(ells=ells)[1][indmin:indmax]        
             xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
             xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
+        xic = np.concatenate((xic0,xic2))
+        xicb = np.concatenate((xic0b,xic2b))
 
 #         if args.covmd == 'rec':
 #             result = pypower.CatalogFFTCorr.load(dirm+nr+'/'+fnm).poles
