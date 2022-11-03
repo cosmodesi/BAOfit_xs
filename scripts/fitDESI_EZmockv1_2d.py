@@ -129,7 +129,7 @@ if args.gencov:
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/ELG/Xi/lhior/npy/'
         fnm = dirm +'Xi_CubicBox_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed'
     if args.covmd == 'rec':
-        result = pypower.CatalogFFTCorr(dirm+'1/'+fnm)
+        result = pypower.CatalogFFTCorr.load(dirm+'1/'+fnm)
     else:    
         result = pycorr.TwoPointCorrelationFunction.load(fnm+'1'+znm+'.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
