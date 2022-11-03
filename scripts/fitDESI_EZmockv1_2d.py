@@ -12,6 +12,7 @@ import numpy.linalg as linalg
 import argparse
 
 import pycorr
+import pypower
 
 parser = argparse.ArgumentParser()
 #for getting the correct data
