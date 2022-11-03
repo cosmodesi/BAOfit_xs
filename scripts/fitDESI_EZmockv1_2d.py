@@ -128,13 +128,16 @@ if args.gencov:
     if args.tracer == 'ELGcubic':
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/ELG/Xi/lhior/npy/'
         fnm = dirm +'Xi_CubicBox_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed'
+    ells = (0, 2)
     if args.covmd == 'rec':
         result = pypower.CatalogFFTCorr.load(dirm+'1/'+fnm).poles
+        rebinned = result[:(result.shape[0]//bs)*bs:bs]    
+        s, xiell = rebinned(ell=ells, return_sep=True)
+
     else:    
         result = pycorr.TwoPointCorrelationFunction.load(fnm+'1'+znm+'.npy')
-    rebinned = result[:(result.shape[0]//bs)*bs:bs]
-    ells = (0, 2)
-    s, xiell = rebinned(ells=ells, return_sep=True)
+        rebinned = result[:(result.shape[0]//bs)*bs:bs]    
+        s, xiell = rebinned(ells=ells, return_sep=True)
     indmin = 0
     indmax = len(s)
     indmaxb = len(s)
@@ -167,16 +170,22 @@ if args.gencov:
         nr = str(i)
         if args.covmd == 'rec':
             result = pypower.CatalogFFTCorr.load(dirm+nr+'/'+fnm).poles
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            xic0 = rebinned(ell=ells)[0][indmin:indmax]
+            xic2 = rebinned(ell=ells)[1][indmin:indmax]        
+            xic0b = rebinned(ell=ells)[0][indmin:indmaxb]
+            xic2b = rebinned(ell=ells)[1][indmin:indmaxb]
+
         else:    
             result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
-        rebinned = result[:(result.shape[0]//bs)*bs:bs]
-        xic0 = rebinned(ells=ells)[0][indmin:indmax]
-        xic2 = rebinned(ells=ells)[1][indmin:indmax]
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            xic0 = rebinned(ells=ells)[0][indmin:indmax]
+            xic2 = rebinned(ells=ells)[1][indmin:indmax]        
+            xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
+            xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
         xic = np.concatenate((xic0,xic2))
-        xiave += xic
-        xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
-        xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
         xicb = np.concatenate((xic0b,xic2b))
+        xiave += xic
         xiaveb += xicb
         Ntot += 1.
     print( Ntot)        
@@ -186,17 +195,33 @@ if args.gencov:
         nr = str(i)
         if args.covmd == 'rec':
             result = pypower.CatalogFFTCorr.load(dirm+nr+'/'+fnm).poles
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            xic0 = rebinned(ell=ells)[0][indmin:indmax]
+            xic2 = rebinned(ell=ells)[1][indmin:indmax]        
+            xic0b = rebinned(ell=ells)[0][indmin:indmaxb]
+            xic2b = rebinned(ell=ells)[1][indmin:indmaxb]
+
         else:    
             result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
+            rebinned = result[:(result.shape[0]//bs)*bs:bs]
+            xic0 = rebinned(ells=ells)[0][indmin:indmax]
+            xic2 = rebinned(ells=ells)[1][indmin:indmax]        
+            xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
+            xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
 
-        #result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
-        rebinned = result[:(result.shape[0]//bs)*bs:bs]
-        xic0 = rebinned(ells=ells)[0][indmin:indmax]
-        xic2 = rebinned(ells=ells)[1][indmin:indmax]
-        xic = np.concatenate((xic0,xic2))
-        xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
-        xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
-        xicb = np.concatenate((xic0b,xic2b))
+#         if args.covmd == 'rec':
+#             result = pypower.CatalogFFTCorr.load(dirm+nr+'/'+fnm).poles
+#         else:    
+#             result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
+# 
+#         #result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
+#         rebinned = result[:(result.shape[0]//bs)*bs:bs]
+#         xic0 = rebinned(ells=ells)[0][indmin:indmax]
+#         xic2 = rebinned(ells=ells)[1][indmin:indmax]
+#         xic = np.concatenate((xic0,xic2))
+#         xic0b = rebinned(ells=ells)[0][indmin:indmaxb]
+#         xic2b = rebinned(ells=ells)[1][indmin:indmaxb]
+#         xicb = np.concatenate((xic0b,xic2b))
         for j in range(0,nbin):
             xij = xic[j]
             for k in range(0,nbin):
