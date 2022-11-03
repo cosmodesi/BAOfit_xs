@@ -39,6 +39,7 @@ parser.add_argument("--outdir", help="root directory for output",default=None)
 #these should always be true at this point
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--gencov", help="whether or not to generate cov matrix",default=True,type=bool)
+parser.add_argument("--covmd",help="if 'rec', uses recon results to build cov matrix",default='')
 
 parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
@@ -108,6 +109,9 @@ if args.gencov:
     if args.tracer == 'LRGcubic':
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/LRG/Xi/jmena/pycorr_format/'
         fnm = dirm+'Xi_EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
+        if arg.covmd == 'rec':
+            dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/LRG/Xi/Post/forero/fiducial_settings/z0.800/EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
+            fnm = 'sym_fft_tpcf.pkl.npy'
     if args.tracer == 'ELG':
         if zmin == 0.6:
             zbin = '1'
@@ -120,7 +124,10 @@ if args.gencov:
     if args.tracer == 'ELGcubic':
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/ELG/Xi/lhior/npy/'
         fnm = dirm +'Xi_CubicBox_ELG_z1.100_EZmock_B2000G512Z1.1N24000470_b0.345d1.45r40c0.05_seed'
-    result = pycorr.TwoPointCorrelationFunction.load(fnm+'1'+znm+'.npy')
+    if args.covmd == 'rec':
+        result = pycorr.TwoPointCorrelationFunction.load(dirm+'1/'+fnm)
+    else:    
+        result = pycorr.TwoPointCorrelationFunction.load(fnm+'1'+znm+'.npy')
     rebinned = result[:(result.shape[0]//bs)*bs:bs]
     ells = (0, 2)
     s, xiell = rebinned(ells=ells, return_sep=True)
@@ -154,7 +161,10 @@ if args.gencov:
     fac = 1.
     for i in range(1,Nmock+1):
         nr = str(i)
-        result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
+        if args.covmd == 'rec':
+            result = pycorr.TwoPointCorrelationFunction.load(dirm+nr'/'+fnm)
+        else:    
+            result = pycorr.TwoPointCorrelationFunction.load(fnm+nr+znm+'.npy')
         rebinned = result[:(result.shape[0]//bs)*bs:bs]
         xic0 = rebinned(ells=ells)[0][indmin:indmax]
         xic2 = rebinned(ells=ells)[1][indmin:indmax]
@@ -189,8 +199,8 @@ if args.gencov:
                 xik = xicb[k]
                 covb[j][k] += (xij-xiaveb[j])*(xik-xiaveb[k])
 
-    cov = cov/float(Ntot)             
-    covb = covb/float(Ntot)      
+    cov = cov/float(Ntot-1)             
+    covb = covb/float(Ntot-1)      
     sc = np.concatenate((s[indmin:indmax],s[indmin:indmax]))
     scb = np.concatenate((s[indmin:indmaxb],s[indmin:indmaxb]))
     #return cov
@@ -458,6 +468,8 @@ def doreal(mn=0,mean=False):
     if mean:
         mn == 'mean'  
     fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(mn)+'_'+str(bs)+args.recon+args.betamd
+    if args.covmd == 'rec':
+        fout += 'covrec'
     bf.Xism_arat_1C_an(xid,invc,rl,mod,xidb,invcb,rlb,verbose=True,Bp=Bp,Bt=Bt,fout=fout,dirout=outdir,spat=args.spat,spar=args.spar,mina=args.mina,maxa=args.maxa,betamd=args.betamd)
     #bf.plot_2dlik(os.environ['HOME']+'/DESImockbaofits/2Dbaofits/arat'+fout+'1covchi.dat')
     #modl = np.loadtxt(outdir+'ximod'+fout+'.dat').transpose()
