@@ -12,7 +12,7 @@ import numpy.linalg as linalg
 import argparse
 
 import pycorr
-import pypower
+
 
 parser = argparse.ArgumentParser()
 #for getting the correct data
@@ -46,6 +46,9 @@ parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
 parser.add_argument("--domean", help="if 'y', only fit to mean",default='n')
 args = parser.parse_args()
+
+if args.covmd == 'rec':
+    import pypower
 
 dofit = True
 
