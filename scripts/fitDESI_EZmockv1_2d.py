@@ -109,7 +109,7 @@ if args.gencov:
     if args.tracer == 'LRGcubic':
         dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/LRG/Xi/jmena/pycorr_format/'
         fnm = dirm+'Xi_EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
-        if arg.covmd == 'rec':
+        if args.covmd == 'rec':
             dirm = '/global/cfs/cdirs/desi/cosmosim/KP45/MC/Clustering/EZmock/CubicBox/LRG/Xi/Post/forero/fiducial_settings/z0.800/EZmock_B2000G512Z0.8N8015724_b0.385d4r169c0.3_seed'
             fnm = 'sym_fft_tpcf.pkl.npy'
     if args.tracer == 'ELG':
