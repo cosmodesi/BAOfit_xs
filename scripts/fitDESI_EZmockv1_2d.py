@@ -132,7 +132,7 @@ if args.gencov:
     if args.covmd == 'rec':
         result = pypower.CatalogFFTCorr.load(dirm+'1/'+fnm).poles
         rebinned = result[:(result.shape[0]//bs)*bs:bs]    
-        s, xiell = rebinned(ell=ells, return_sep=True)
+        s, xiell = rebinned(ell=ells, return_s=True)
 
     else:    
         result = pycorr.TwoPointCorrelationFunction.load(fnm+'1'+znm+'.npy')
