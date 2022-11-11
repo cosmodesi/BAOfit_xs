@@ -535,7 +535,7 @@ if args.domean != 'y':
     fo = open(foutall,'w')
     fo.write('#Mock_number <alpha_||> sigma(||) <alpha_perp> sigma_perp min(chi2) cov_||,perp corr_||,perp\n')
     for ii in range(0,Nmock):
-        fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)+args.recon
+        fout = args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_real'+str(ii)+'_'+str(bs)+args.recon+args.betamd
         ans = bf.sigreg_2dEZ(outdir+'2Dbaofits/arat'+fout+'1covchi.dat')
         fo.write(str(ii)+' ')
         for val in ans:
