@@ -45,6 +45,7 @@ parser.add_argument("--covmd",help="if 'rec', uses recon results to build cov ma
 parser.add_argument("--par", help="do 25 realizations in parallel",default='y')
 parser.add_argument("--statsonly", help="if True, skip everything except for stats at end",default=False,type=bool)
 parser.add_argument("--domean", help="if 'y', only fit to mean",default='n')
+parser.add_argument("--fit_theory", help="if 'y', only fit to PT theory template",default='n')
 args = parser.parse_args()
 
 if args.covmd == 'rec':
@@ -446,6 +447,15 @@ def doreal(mn=0,mean=False):
             xid0b = xid0[indmin:indmaxb]#/= 25.
             xid2b = xid2[indmin:indmax]#/= 25.
             
+        elif args.fit_theory == 'y':
+            fn = dirout + 'xiells_recsym_theory.txt'
+            xiell = np.loadtxt(fn).transpose()
+            xid0 = xiell[1][indmin:indmax]
+            xid2 = xiell[2][indmin:indmax]
+    #       
+            xid0b = xiell[1][indmin:indmaxb]
+            xid2b = xiell[2][indmin:indmaxb]
+            
         else:
             result = pycorr.TwoPointCorrelationFunction.load(abdir+fnm)
             rebinned = result[:(result.shape[0]//bs)*bs:bs]
@@ -528,7 +538,7 @@ if dofit:
         else:
             doreal(0)
 
-if args.domean != 'y':
+if args.domean != 'y' and arg.fit_theory != 'y':
     #compile stats
     Nmock = 25
     foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+args.recon+'.txt'
