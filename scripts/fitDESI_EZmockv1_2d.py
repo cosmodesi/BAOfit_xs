@@ -448,7 +448,7 @@ def doreal(mn=0,mean=False):
             xid2b = xid2[indmin:indmax]#/= 25.
             
         elif args.fit_theory == 'y':
-            fn = dirout + 'xiells_recsym_theory.txt'
+            fn = outdir + 'xiells_recsym_theory.txt'
             xiell = np.loadtxt(fn).transpose()
             xid0 = xiell[1][indmin:indmax]
             xid2 = xiell[2][indmin:indmax]
