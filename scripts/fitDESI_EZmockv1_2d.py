@@ -538,7 +538,7 @@ if dofit:
         else:
             doreal(0)
 
-if args.domean != 'y' and arg.fit_theory != 'y':
+if args.domean != 'y' and args.fit_theory != 'y':
     #compile stats
     Nmock = 25
     foutall = outdir+'AperpAparfits_'+args.tracer+tw+'ab_'+args.pv+str(zmin)+str(zmax)+wm+'_'+str(bs)+args.recon+'.txt'
