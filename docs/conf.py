@@ -61,8 +61,6 @@ exclude_patterns = ['build', '**.ipynb_checkpoints']
 html_static_path = []
 
 
-extlinks = {'root': (git_root + '%s','')}
-
 intersphinx_mapping = {
     'numpy': ('https://numpy.org/doc/stable/', None)
 }
