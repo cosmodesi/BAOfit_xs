@@ -14,7 +14,6 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath(os.path.join('..', 'BAOfit')))
-from _version import __version__
 
 # -- General configuration ------------------------------------------------
 
@@ -38,7 +37,7 @@ project = 'BAOfit_xs'
 copyright = '2021, cosmodesi'
 
 # The full version, including alpha/beta/rc tags
-release = __version__
+#release = __version__
 
 html_theme = 'sphinx_rtd_theme'
 
