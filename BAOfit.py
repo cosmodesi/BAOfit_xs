@@ -225,7 +225,7 @@ def pk3elldfile_dewig(beta=0.4,sigt=3.0,sigr=3.0,sfog=3.5,mun=1.,sigs=15.,sigz=0
             #C *doesn't include damping*
             S = mun*exp(-0.5*(k*sigs)**2.)
             C = (1.+beta*mu*mu*(1.-S))*1./(1.+k**2.*mu**2.*(sfog)**2./2.)
-            sigv2 = (1-mu**2.)*sigt**2./4.+mu**2.*sigr**2./4.
+            sigv2 = (1-mu**2.)*sigt**2./4.+mu**2.*sigr**2./4. #note, this is actually not (sigv)^2, it gets squared in the exponent later
             damp = exp(-1.*k*k*sigv2)
             if sigz != 0:
                 C = C*exp(-0.5*k*k*mu*mu*sigzc*sigzc)   
