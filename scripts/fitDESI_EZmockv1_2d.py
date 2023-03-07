@@ -280,6 +280,76 @@ if args.gencov:
         rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
         rlb.append(rbc) 
 
+elif args.covmd == 'theory':
+    rl = []
+    #nbin = 0
+    #for i in range(0,len(sc)):
+    rbc = 0
+    r = bs/2.
+    while rbc < rmax:
+        #correct for pairs should have slightly larger average pair distance than the bin center
+        #this assumes mid point of bin is being used and pairs come from full 3D volume
+        rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
+        rl.append(rbc) 
+        r += bs
+
+    rlb = []
+    rbc = 0
+    r = bs/2.
+    #nbin = 0
+    while rbc < rmaxb:
+        #correct for pairs should have slightly larger average pair distance than the bin center
+        #this assumes mid point of bin is being used and pairs come from full 3D volume
+        rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
+        rlb.append(rbc) 
+        r += bs
+
+
+    print('put in something to point to correct theory cov name and its parameters')
+    if thcovfilepath == '/global/cfs/cdirs/desi/users/mrash/RascalC/AbacusSummit/CutSky/Y5/xi024_LRG_main_0.8_1.1_uniform_lin4_s20-200_cov_RascalC_Gaussian.txt':
+        thrmin = 20
+        thrmax = 200
+        bc = np.arange(thrmin,thrrmax,bs)+bs/2
+        #correct them
+        for i,r in enumerate(bc):
+            rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.)
+            bc[i] = rbc
+        bcall = np.concatenate([bc,bc,np.zeros(len(bc))]) #zeros at the end because we don't want the hexadecapole 
+    selbc = bcall > rmin
+    selbc &= bcall < rmax
+    selbcb = bcall > rmin
+    selbcb &= bcall < rmaxb
+
+    covtot = np.loadtxt(thcovfilepath)
+    covlen = len(bcall[selbc])
+    cov = np.zeros((covlen,covlen))    
+    covlenb = len(bcall[selbcb])
+    covb = np.zeros((covlenb,covlenb))    
+
+	iind = 0
+	for i in range(0,len(covtot)):
+		jind = 0
+		if selbc[i] == True:
+			for j in range(0,len(covtot)):
+				if selbc[j] == True:
+					cov[iind][jind] = covtot[i][j]
+					jind += 1
+			iind += 1
+
+	#repeat for covb
+	iind = 0
+	for i in range(0,len(covtot)):
+		jind = 0
+		if selbcb[i] == True:
+			for j in range(0,len(covtot)):
+				if selbcb[j] == True:
+					covb[iind][jind] = covtot[i][j]
+					jind += 1
+			iind += 1
+
+    invc = np.linalg.inv(cov) #the inverse covariance matrix to pass to the code
+    invcb = np.linalg.inv(covb) #the inverse covariance matrix to get the bias values to pass to the code
+
 
 wm = str(beta)+str(sfog)+str(dperp)+str(drad)
 mod = 'DESI'+wm+'15.00.dat'
