@@ -284,36 +284,40 @@ elif args.covmd == 'theory':
     rl = []
     #nbin = 0
     #for i in range(0,len(sc)):
-    rbc = 0
+    #rbc = 0
     r = bs/2.
+    rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
     ind = 0
     s = 0
     while rbc < rmax:
         #correct for pairs should have slightly larger average pair distance than the bin center
         #this assumes mid point of bin is being used and pairs come from full 3D volume
-        rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
+        
         if rbc > rmin:
             rl.append(rbc)
             if s == 0:
                 indmin = ind
                 s = 1 
         r += bs
+        rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
         ind += 1
     indmax = ind
     rl = np.array(rl)
     rl = np.concatenate([rl,rl]) #duplicate for xi0,2
     rlb = []
-    rbc = 0
+    #rbc = 0
     r = bs/2.
+    rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
     #nbin = 0
     ind = 0
     while rbc < rmaxb:
         #correct for pairs should have slightly larger average pair distance than the bin center
         #this assumes mid point of bin is being used and pairs come from full 3D volume
-        rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
+        
         if rbc > rmin:
             rlb.append(rbc) 
         r += bs
+        rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
         ind += 1
     indmaxb = ind
     rlb = np.array(rlb)
