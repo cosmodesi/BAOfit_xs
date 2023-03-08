@@ -300,6 +300,8 @@ elif args.covmd == 'theory':
         r += bs
         ind += 1
     indmax = ind
+    rl = np.array(rl)
+    rl = np.concatenate([rl,rl]) #duplicate for xi0,2
     rlb = []
     rbc = 0
     r = bs/2.
@@ -314,6 +316,8 @@ elif args.covmd == 'theory':
         r += bs
         ind += 1
     indmaxb = ind
+    rlb = np.array(rlb)
+    rlb = np.concatenate([rlb,rlb]) #duplicate for xi0,2
 
     print('put in something to point to correct theory cov name and its parameters')
     if thcovfilepath == '/global/cfs/cdirs/desi/users/mrash/RascalC/AbacusSummit/CutSky/Y5/xi024_LRG_main_0.8_1.1_uniform_lin4_s20-200_cov_RascalC_Gaussian.txt':
