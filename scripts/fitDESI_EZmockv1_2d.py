@@ -286,24 +286,34 @@ elif args.covmd == 'theory':
     #for i in range(0,len(sc)):
     rbc = 0
     r = bs/2.
+    ind = 0
+    s = 0
     while rbc < rmax:
         #correct for pairs should have slightly larger average pair distance than the bin center
         #this assumes mid point of bin is being used and pairs come from full 3D volume
         rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
-        rl.append(rbc) 
+        if rbc > rmin:
+            rl.append(rbc)
+            if s == 0:
+                indmin = ind
+                s = 1 
         r += bs
-
+        ind += 1
+    indmax = ind
     rlb = []
     rbc = 0
     r = bs/2.
     #nbin = 0
+    ind = 0
     while rbc < rmaxb:
         #correct for pairs should have slightly larger average pair distance than the bin center
         #this assumes mid point of bin is being used and pairs come from full 3D volume
         rbc = .75*((r+bs/2.)**4.-(r-bs/2.)**4.)/((r+bs/2.)**3.-(r-bs/2.)**3.) 
-        rlb.append(rbc) 
+        if rbc > rmin:
+            rlb.append(rbc) 
         r += bs
-
+        ind += 1
+    indmaxb = ind
 
     print('put in something to point to correct theory cov name and its parameters')
     if thcovfilepath == '/global/cfs/cdirs/desi/users/mrash/RascalC/AbacusSummit/CutSky/Y5/xi024_LRG_main_0.8_1.1_uniform_lin4_s20-200_cov_RascalC_Gaussian.txt':
