@@ -763,7 +763,7 @@ class baofit3D_ellFull_1cov:
         Btfac = (log(Beta/self.B0)/self.Bt)**2.
         return chit+BBfac+Btfac
 
-    def chi_templ_alphfXX_an(self,list,wo='n',fw='',v='n')#,md='iso'):
+    def chi_templ_alphfXX_an(self,list,wo='n',fw='',v='n'):#,md='iso'):
         from time import time
         t = time()
         BB = list[0]
