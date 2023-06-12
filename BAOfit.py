@@ -928,7 +928,7 @@ def sigreg_2dEZ(file):
     w = (chi2-np.min(chi2)) < 1
     indmin = np.argmin(chi2)
     aiso = (d[0]*d[1]**2.)**(1/3.)
-    aap = (a[0]/d[1])
+    aap = (d[0]/d[1])
     miso = np.sum(prob*aiso)/pnorm
     mep = np.sum(prob*aap)/pnorm
     siso = np.sum(prob*aiso**2.)/pnorm
