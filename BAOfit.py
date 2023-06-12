@@ -927,10 +927,20 @@ def sigreg_2dEZ(file):
     crp = np.sum(prob*d[0]*d[1])/pnorm-mar*map
     w = (chi2-np.min(chi2)) < 1
     indmin = np.argmin(chi2)
+    aiso = (d[0]*d[1]**2.)**(1/3.)
+    aap = (a[0]/d[1])
+    miso = np.sum(prob*aiso)/pnorm
+    mep = np.sum(prob*aap)/pnorm
+    siso = np.sum(prob*aiso**2.)/pnorm
+    sap = np.sum(prob*aap**2.)/pnorm
+
+    sigiso = sqrt(siso-miso**2.)
+    sigap = sqrt(sap-mep**2.)
+
     #print(d[0][indmin],d[1][indmin])
     #print(np.max(abs(d[0][w]-d[0][indmin])),np.max(d[0][indmin]-abs(d[0][w])))
     #print(np.max(abs(d[1][w]-d[1][indmin])),np.max(d[1][indmin]-abs(d[1][w])))
-    return mar,sigr,map,sigp,np.min(chi2),crp,crp/(sigr*sigp)
+    return mar,sigr,map,sigp,np.min(chi2),crp,crp/(sigr*sigp),aiso,sigiso,mep,sap
     
 
 def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=.8,maxa=1.2,nobao='n',Bp=.4,Bt=.4,meth='Powell',fout='',dirout='',Nmock=1000,verbose=False,betamd='iso'):
