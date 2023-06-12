@@ -940,7 +940,7 @@ def sigreg_2dEZ(file):
     #print(d[0][indmin],d[1][indmin])
     #print(np.max(abs(d[0][w]-d[0][indmin])),np.max(d[0][indmin]-abs(d[0][w])))
     #print(np.max(abs(d[1][w]-d[1][indmin])),np.max(d[1][indmin]-abs(d[1][w])))
-    return mar,sigr,map,sigp,np.min(chi2),crp,crp/(sigr*sigp),aiso,sigiso,mep,sap
+    return mar,sigr,map,sigp,np.min(chi2),crp,crp/(sigr*sigp),miso,sigiso,mep,sigap
     
 
 def Xism_arat_1C_an(dv,icov,rl,mod,dvb,icovb,rlb,B0=1.,spat=.003,spar=.006,mina=.8,maxa=1.2,nobao='n',Bp=.4,Bt=.4,meth='Powell',fout='',dirout='',Nmock=1000,verbose=False,betamd='iso'):
