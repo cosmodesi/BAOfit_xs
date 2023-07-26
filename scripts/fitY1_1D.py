@@ -24,7 +24,7 @@ parser.add_argument("--diagfac", help="apply a factor to only the diagonal of th
 parser.add_argument("--catver", help="data version",default='v0.1')
 parser.add_argument("--njack", help="number of jack knife used",default='0')
 parser.add_argument("--weight", help="weight type used for xi",default='default_FKP')
-parser.add_argument("--reg", help="regions used for xi",default='GCcomb_')
+parser.add_argument("--reg", help="regions used for xi",default='GCcomb')
 parser.add_argument("--dperp", help="transverse damping; default is about right for z~1",default=4.0,type=float)
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
