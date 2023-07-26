@@ -42,7 +42,7 @@ rmin = args.rmin
 rmax = args.rmax
 maxb = 80.
 binc = 0
-
+spa = .001
 zmin = args.zmin
 zmax = args.zmax
 zr = str(zmin)+'_'+str(zmax)
