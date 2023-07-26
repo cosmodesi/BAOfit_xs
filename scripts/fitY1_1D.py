@@ -205,7 +205,7 @@ plt.savefig(outdir+'/alpha_iso_likelihood_'+flout+'.png')
 #plt.show()
 
 plt.errorbar(rl,rl**2.*xid,rl**2*diag,fmt='o',color=color)
-fmod = outdir+'ximod'+tp+zr+wm+str(bs)+'.dat'
+fmod = outdir+'ximod'+flout+'.dat'#tp+zr+wm+str(bs)+'.dat'
 mod = np.loadtxt(fmod).transpose()
 plt.plot(mod[0],mod[0]**2.*mod[1],'k-',label=r'$\chi^2$/dof='+str(round(minchi2,3))+'/'+str(nbin-5))
 plt.grid()
