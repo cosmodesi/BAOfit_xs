@@ -48,6 +48,7 @@ zmax = args.zmax
 zr = str(zmin)+'_'+str(zmax)
 bs = 4#args.bs
 cov_rmin = 20
+tp = args.tracer
 
 #if args.rectype is None:
 #    dirxi = '/global/cfs/cdirs/desi/survey/catalogs/Y1/LSS/iron/LSScats/'+args.catver+blinded+'/xi/smu/'
