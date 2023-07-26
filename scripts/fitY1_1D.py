@@ -31,7 +31,7 @@ parser.add_argument("--sfog", help="streaming velocity term; default standardish
 parser.add_argument("--beta", help="fiducial beta in template; shouldn't matter for pre-rec",default=0.4,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--covmd", help="what type of cov matrix to use",default='RascalC')
-parser.add_argument("--rectype", help="type of reconstruction",default=None)
+parser.add_argument("--rectype", help="type of reconstruction",default='')
 parser.add_argument("--smooth", help="smoothing in reconstruction reconstruction",choices=['','/recon_sm10','/recon_sm15'],default='')
 parser.add_argument("--covrec", help="type of reconstruction used for cov generation",default='')
 parser.add_argument("--covver", help="version associated with the covariance matrix",default='v0.1')
@@ -83,7 +83,7 @@ if args.gentemp:
     #beta is b/f, so should be changed depending on tracer
     #sp is the spacing in Mpc/h of the templates that get written out, most of the rest of the code assumes 1
     #BAO and nowiggle templates get written out for xi0,xi2,xi4 (2D code reconstructions xi(s,mu) from xi0,xi2,xi4)
-    if args.rectype == None:
+    if args.rectype == '':
         bf.mkxifile_3dewig(sp=1.,v='n',mun=0,beta=args.beta,sfog=args.sfog,sigt=args.dperp,sigr=args.drad,sigs=15.)
         munw = '0'
     elif 'sym' in args.rectype:
