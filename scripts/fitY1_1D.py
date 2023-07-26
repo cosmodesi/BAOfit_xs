@@ -56,7 +56,7 @@ dirxi = '/global/cfs/cdirs/desi/survey/catalogs/Y1/LSS/iron/LSScats/'+args.catve
 
 dircov = '/global/cfs/cdirs/desi/users/mrash/RascalC/Y1'+args.blinded+'/'+args.covver
 
-outdir = '/global/cfs/cdirs/desi/science/Y1KP/BAO/'+args.catver+blinded+args.smooth+'/AJR/'
+outdir = '/global/cfs/cdirs/desi/science/Y1KP/BAO/'+args.catver+args.blinded+args.smooth+'/AJR/'
 
 os.makedirs(outdir,exist_ok = True)
 
