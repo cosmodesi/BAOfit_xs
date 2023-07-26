@@ -49,6 +49,9 @@ zr = str(zmin)+'_'+str(zmax)
 bs = 4#args.bs
 cov_rmin = 20
 tp = args.tracer
+color = 'k'
+if 'LRG' in tp:
+    color = 'r'
 
 #if args.rectype is None:
 #    dirxi = '/global/cfs/cdirs/desi/survey/catalogs/Y1/LSS/iron/LSScats/'+args.catver+blinded+'/xi/smu/'
