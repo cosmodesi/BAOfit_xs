@@ -52,9 +52,9 @@ cov_rmin = 20
 #if args.rectype is None:
 #    dirxi = '/global/cfs/cdirs/desi/survey/catalogs/Y1/LSS/iron/LSScats/'+args.catver+blinded+'/xi/smu/'
 #else:
-dirxi = '/global/cfs/cdirs/desi/survey/catalogs/Y1/LSS/iron/LSScats/'+args.catver+blinded+args.smooth+'/xi/smu/'
+dirxi = '/global/cfs/cdirs/desi/survey/catalogs/Y1/LSS/iron/LSScats/'+args.catver+args.blinded+args.smooth+'/xi/smu/'
 
-dircov = '/global/cfs/cdirs/desi/users/mrash/RascalC/Y1'+blinded+'/'+args.covver
+dircov = '/global/cfs/cdirs/desi/users/mrash/RascalC/Y1'+args.blinded+'/'+args.covver
 
 outdir = '/global/cfs/cdirs/desi/science/Y1KP/BAO/'+args.catver+blinded+args.smooth+'/AJR/'
 
