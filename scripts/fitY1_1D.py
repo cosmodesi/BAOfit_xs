@@ -66,7 +66,7 @@ if args.covmd == 'RascalC':
 else:
     sys.exit('RascalC is the only coded option so far')
 
-df = dirxi+'xipoles_'+tp+args.rectype+'_'+reg+'_'+zr+'_default_FKP_lin4_njack0_nran4_split20.txt'
+df = dirxi+'xipoles_'+tp+args.rectype+'_'+args.reg+'_'+zr+'_default_FKP_lin4_njack0_nran4_split20.txt'
 print('using '+df+' for data vector')
 dxi = np.loadtxt(df).transpose()
 print('using '+covf+' for cov matrix')
