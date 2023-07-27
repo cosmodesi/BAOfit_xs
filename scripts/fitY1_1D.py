@@ -35,6 +35,7 @@ parser.add_argument("--rectype", help="type of reconstruction",default='')
 parser.add_argument("--smooth", help="smoothing in reconstruction reconstruction",choices=['','/recon_sm10','/recon_sm15'],default='')
 parser.add_argument("--covrec", help="type of reconstruction used for cov generation",default='')
 parser.add_argument("--covver", help="version associated with the covariance matrix",default='v0.1')
+parser.add_argument("--covzr", help="zrange associated with the covariance matrix, same as data by default",default=None)
 parser.add_argument("--blinded", help="whether to use blinded catalogs",default='/blinded')
 args = parser.parse_args()
 
@@ -46,6 +47,9 @@ spa = .001
 zmin = args.zmin
 zmax = args.zmax
 zr = str(zmin)+'_'+str(zmax)
+covzr = zr
+if args.covzr is not None:
+    covzr = args.covzr
 bs = 4#args.bs
 cov_rmin = 20
 tp = args.tracer
@@ -65,7 +69,7 @@ outdir = '/global/cfs/cdirs/desi/science/Y1KP/BAO/'+args.catver+args.blinded+arg
 os.makedirs(outdir,exist_ok = True)
 
 if args.covmd == 'RascalC':
-    covf = dircov+'/xi024_'+args.tracer+args.covrec+'_'+args.reg+'_'+zr+'_default_FKP_lin4_s20-200_cov_RascalC_Gaussian.txt'
+    covf = dircov+'/xi024_'+args.tracer+args.covrec+'_'+args.reg+'_'+covzr+'_default_FKP_lin4_s20-200_cov_RascalC_Gaussian.txt'
 else:
     sys.exit('RascalC is the only coded option so far')
 
