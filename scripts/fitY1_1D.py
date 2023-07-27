@@ -221,7 +221,7 @@ plt.savefig(outdir+'/xi0_1D_modelfit_'+flout+'.png')
 #plt.ylim(-50,100)
 #plt.show()
 
-indmin = (rmin-cov_rmin)//bs
+indmin = int((rmin-cov_rmin)//bs)
 plt.errorbar(mod[0],xid[indmin:indmin+nbin]-mod[1],diag[indmin:indmin+nbin],fmt='o',color=color)
 plt.grid()
 plt.xlabel(r'$s$ (Mpc/h)')
