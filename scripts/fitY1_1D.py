@@ -75,6 +75,8 @@ dxi = np.loadtxt(df).transpose()
 print('using '+covf+' for cov matrix')
 cov = np.loadtxt(covf)
 cov *= args.cfac
+for i in range(0,len(cov)):
+    cov[i][i] *= args.diagfac
 #except:
 #    print('not using rec cov')
 #    cov = np.loadtxt(dircov+'xi024_'+tp+'_'+reg+'_'+zr+'_default_FKP_lin4_s20-200_cov_RascalC_Gaussian.txt')
