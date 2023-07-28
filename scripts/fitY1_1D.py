@@ -29,6 +29,7 @@ parser.add_argument("--dperp", help="transverse damping; default is about right 
 parser.add_argument("--drad", help="radial damping; default is about right for z~1",default=8.0,type=float)
 parser.add_argument("--sfog", help="streaming velocity term; default standardish value",default=3.0,type=float)
 parser.add_argument("--beta", help="fiducial beta in template; shouldn't matter for pre-rec",default=0.4,type=float)
+parser.add_argument("--Bp", help="width of Gaussian prior on the template amplitude",default=0.4,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--covmd", help="what type of cov matrix to use",default='RascalC')
 parser.add_argument("--rectype", help="type of reconstruction",default='')
@@ -180,14 +181,14 @@ bs = 4
 
 flout = args.tracer+zr+wm+str(bs)+'_cov'+args.covmd+args.covver+args.covrec
 
-lik = bf.doxi_isolike(xid,cov,mod,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=.4,rminb=rmin,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo=flout,diro=outdir)
+lik = bf.doxi_isolike(xid,cov,mod,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=args.Bp,rminb=rmin,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo=flout,diro=outdir)
 selr = rl > rmin
 selr &= rl < rmax
 nbin = len(rl[selr])
 minchi2 = min(lik)
 print('minimum chi2 is '+str(min(lik))+' for '+str(nbin-5)+' dof')
 print('doing no BAO fit')
-liksm = bf.doxi_isolike(xid,cov,modsm,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=.4,rminb=rmin,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo='sm'+flout,diro=outdir)
+liksm = bf.doxi_isolike(xid,cov,modsm,modsm,rl,bs=bs,rmin=rmin,rmax=rmax,npar=3,sp=1.,Bp=args.Bp,rminb=rmin,rmaxb=maxb,spa=spa,mina=.8,maxa=1.2,Nmock=Nmock,v='',wo='sm'+flout,diro=outdir)
 
 
 al = [] #list to be filled with alpha values
