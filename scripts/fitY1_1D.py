@@ -21,7 +21,7 @@ parser.add_argument("--rmax", help="maximum redshift",default=150,type=float)
 #parser.add_argument("--bs", help="bin size in Mpc/h, some integer multiple of 1",default=4,type=int)
 parser.add_argument("--cfac", help="any factor to apply to the cov matrix",default=1,type=float)
 parser.add_argument("--diagfac", help="apply a factor to only the diagonal of the cov matrix",default=1,type=float)
-parser.add_argument("--catver", help="data version",default='v0.1')
+parser.add_argument("--catver", help="data version",default='v0.6')
 parser.add_argument("--njack", help="number of jack knife used",default='0')
 parser.add_argument("--weight", help="weight type used for xi",default='default_FKP')
 parser.add_argument("--reg", help="regions used for xi",default='GCcomb')
@@ -32,10 +32,11 @@ parser.add_argument("--beta", help="fiducial beta in template; shouldn't matter 
 parser.add_argument("--Bp", help="width of Gaussian prior on the template amplitude",default=0.4,type=float)
 parser.add_argument("--gentemp", help="whether or not to generate BAO templates",default=True,type=bool)
 parser.add_argument("--covmd", help="what type of cov matrix to use",default='RascalC')
+parser.add_argument("--rcmd", help="what mode for rascalc cov matrix",choices=['Gaussian','rescaled'],default='rescaled')
 parser.add_argument("--rectype", help="type of reconstruction",default='')
 parser.add_argument("--smooth", help="smoothing in reconstruction reconstruction",choices=['','/recon_sm10','/recon_sm15'],default='')
 parser.add_argument("--covrec", help="type of reconstruction used for cov generation",default='')
-parser.add_argument("--covver", help="version associated with the covariance matrix",default='v0.1')
+parser.add_argument("--covver", help="version associated with the covariance matrix",default='v0.6')
 parser.add_argument("--covzr", help="zrange associated with the covariance matrix, same as data by default",default=None)
 parser.add_argument("--blinded", help="whether to use blinded catalogs",default='/blinded')
 args = parser.parse_args()
@@ -70,7 +71,7 @@ outdir = '/global/cfs/cdirs/desi/science/Y1KP/BAO/'+args.catver+args.blinded+arg
 os.makedirs(outdir,exist_ok = True)
 
 if args.covmd == 'RascalC':
-    covf = dircov+'/xi024_'+args.tracer+args.covrec+'_'+args.reg+'_'+covzr+'_default_FKP_lin4_s20-200_cov_RascalC_Gaussian.txt'
+    covf = dircov+'/xi024_'+args.tracer+args.covrec+'_'+args.reg+'_'+covzr+'_default_FKP_lin4_s20-200_cov_RascalC_'+args.rcmd+'.txt'
 else:
     sys.exit('RascalC is the only coded option so far')
 
@@ -238,7 +239,7 @@ plt.savefig(outdir+'/xi0_1D_model_residual_'+flout+'.png')
 #plt.ylim(-50,100)
 #plt.show()
 
-print('the best-fit alpha, uncertainty, and minimumu chi2 from the 1D fit are:')
+print('the best-fit alpha, uncertainty, and minimum chi2 from the 1D fit are:')
 print(alpha,err,minchi2)
 print('results and plot are saved in '+outdir)
 
