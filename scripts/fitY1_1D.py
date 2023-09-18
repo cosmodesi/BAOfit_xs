@@ -258,7 +258,7 @@ plt.xlabel(r'$s$ (Mpc/h)')
 plt.ylabel(r'$\xi_0-\xi_{0,{\rm mod}}$')
 #plt.title(args.catver+' blinded '+tp+' '+zr)
 plt.title(' blinded '+tp+' '+str(args.zmin)+'<z<'+str(args.zmax))
-ax.box_aspect(1)
+ax.set_box_aspect(1)
 plt.savefig(outdir+'/xi0_1D_modelfit_BAO_'+flout+'.png')
 plt.clf()
 
