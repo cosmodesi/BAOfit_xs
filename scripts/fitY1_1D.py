@@ -239,6 +239,16 @@ plt.savefig(outdir+'/xi0_1D_model_residual_'+flout+'.png')
 #plt.ylim(-50,100)
 #plt.show()
 
+indmin = int((rmin-cov_rmin)//bs)
+plt.errorbar(mod[0],xid[indmin:indmin+nbin]-mod[2],diag[indmin:indmin+nbin],fmt='o',color=color)
+plt.plot(mod[0],mod[1]-mod[2],'k-')
+plt.grid()
+plt.xlabel(r'$s$ (Mpc/h)')
+plt.ylabel(r'$\xi_0-\xi_{0,{\rm mod}}$')
+plt.title(args.catver+' blinded '+tp+' '+zr)
+plt.savefig(outdir+'/xi0_1D_modelfit_BAO_'+flout+'.png')
+
+
 print('the best-fit alpha, uncertainty, and minimum chi2 from the 1D fit are:')
 print(alpha,err,minchi2)
 print('results and plot are saved in '+outdir)
