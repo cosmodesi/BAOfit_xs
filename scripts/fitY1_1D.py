@@ -255,10 +255,11 @@ ax.errorbar(mod[0],xid[indmin:indmin+nbin]-mod[2],diag[indmin:indmin+nbin],fmt='
 ax.plot(mod[0],mod[1]-mod[2],'-',color=color)
 #plt.grid()
 plt.xlabel(r'$s$ (Mpc/h)')
-plt.ylabel(r'$\xi_0-\xi_{0,{\rm mod}}$')
+#plt.ylabel(r'$\xi_0-\xi_{0,{\rm mod}}$')
 #plt.title(args.catver+' blinded '+tp+' '+zr)
 plt.title(' blinded '+tp+' '+str(args.zmin)+'<z<'+str(args.zmax))
 ax.set_box_aspect(1)
+ax.set_yticklabels([])
 plt.savefig(outdir+'/xi0_1D_modelfit_BAO_'+flout+'.png')
 plt.clf()
 
