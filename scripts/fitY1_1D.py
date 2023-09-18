@@ -251,7 +251,7 @@ plt.clf()
 
 #indmin = int((rmin-cov_rmin)//bs)
 plt.errorbar(mod[0],xid[indmin:indmin+nbin]-mod[2],diag[indmin:indmin+nbin],fmt='o',color=color)
-plt.plot(mod[0],mod[1]-mod[2],color+'-')
+plt.plot(mod[0],mod[1]-mod[2],'-',color=color)
 plt.grid()
 plt.xlabel(r'$s$ (Mpc/h)')
 plt.ylabel(r'$\xi_0-\xi_{0,{\rm mod}}$')
