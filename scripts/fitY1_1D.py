@@ -3,6 +3,9 @@ import numpy as np
 import os
 import sys
 from matplotlib import pyplot as plt
+sys.path.append(os.getenv('HOME')+'/Y1KPplots/desi_y1_plotting/')
+import KP3style
+
 
 
 Nmock = 1000
@@ -203,6 +206,10 @@ print('result is alpha = '+str((sigs[2]+sigs[1])/2.)+'+/-'+str((sigs[2]-sigs[1])
 
 alpha = round((sigs[2]+sigs[1])/2.,4)
 err = round((sigs[2]-sigs[1])/2.,3)
+
+
+color=KP3style.colors[tp+zr]
+
 plt.plot(al,lik-min(lik),'k-',label='BAO template')
 plt.plot(al,liksm-min(lik),'k:',label='no BAO')
 plt.xlabel(r'$\alpha$ (relative isotropic BAO scale)')
