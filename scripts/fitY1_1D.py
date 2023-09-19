@@ -256,7 +256,7 @@ ax.plot(mod[0],xid[indmin:indmin+nbin]-mod[2],'o',color='w',alpha=.5,markersize=
 ax.plot(mod[0],mod[1]-mod[2],'-',color=color,lw=3)
 ax.xaxis.set_tick_params(labelsize=13)
 #plt.grid()
-plt.xlabel(r'$s$ (Mpc/h)',size=16)
+plt.xlabel(r'$s$ (Mpc/h)',size=16,labelpad=-2)
 #plt.ylabel(r'$\xi_0-\xi_{0,{\rm mod}}$')
 #plt.title(args.catver+' blinded '+tp+' '+zr)
 plt.title(' blinded '+tp[:3]+' '+str(args.zmin)+'<z<'+str(args.zmax),size=16,color=color)
