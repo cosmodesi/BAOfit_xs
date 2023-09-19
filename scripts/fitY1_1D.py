@@ -251,7 +251,7 @@ plt.clf()
 
 #indmin = int((rmin-cov_rmin)//bs)
 fig1, ax = plt.subplots()
-ax.errorbar(mod[0],xid[indmin:indmin+nbin]-mod[2],diag[indmin:indmin+nbin],fmt='o',color=color,markersize=10)
+ax.errorbar(mod[0],xid[indmin:indmin+nbin]-mod[2],diag[indmin:indmin+nbin],fmt='o',color=color,markersize=10,lw=3)
 ax.plot(mod[0],mod[1]-mod[2],'-',color=color,lw=3)
 ax.xaxis.set_tick_params(labelsize=14)
 #plt.grid()
