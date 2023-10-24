@@ -3,9 +3,9 @@ import numpy as np
 import os
 import sys
 from matplotlib import pyplot as plt
-sys.path.append(os.getenv('HOME')+'/Y1KPplots/desi_y1_plotting/')
-import KP3style
-
+#sys.path.append(os.getenv('HOME')+'/Y1KPplots/desi_y1_plotting/')
+ifrom desi_y1_plotting.kp3 import KP3Style 
+KP3style = KP3Style()
 
 
 Nmock = 1000
