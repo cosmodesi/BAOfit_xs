@@ -208,7 +208,7 @@ alpha = round((sigs[2]+sigs[1])/2.,4)
 err = round((sigs[2]-sigs[1])/2.,3)
 
 
-color=KP3style.colors[tp+zr]
+color=KP3style.colors[tp,(args.zmin,args.zmax)]
 
 plt.plot(al,lik-min(lik),'k-',label='BAO template')
 plt.plot(al,liksm-min(lik),'k:',label='no BAO')
