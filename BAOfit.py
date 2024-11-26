@@ -365,6 +365,7 @@ class baofit_iso:
         modl = np.zeros((self.nbin))
         if wo == 'y':
             fo = open(diro+'ximod'+fw+'.dat','w')
+            print('writing to '+diro+'ximod'+fw+'.dat')
             fo.write('# model parameters: '+str(B)+' '+str(Al)+'\n')
         for i in range(0,self.nbin):
             r = self.rl[i]
